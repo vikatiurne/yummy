@@ -1,28 +1,30 @@
-import styles from '../App.module.css'
-import Button from './UI/Button';
+import { useState } from 'react';
+import styles from '../App.module.css';
+import { v4 as uuidv4 } from 'uuid';
 
-const Categories = () => {
+const Categories = ({ categories }) => {
+  const [activeItem, setActiveItem] = useState(null);
+
   return (
-    <div className={styles.sortBy}>
-      <div className={styles.sortByButtons}>
-        <Button onclick={()=>{}}>Всі</Button>
-        <Button onclick={()=>{}}>День Народження</Button>
-        <Button onclick={()=>{}}>Весілля</Button>
-        <Button onclick={()=>{}}>Хрещення</Button>
-        <Button onclick={()=>{}}>Для неї</Button>
-        <Button onclick={()=>{}}>Для нього</Button>
-      </div>
-      <div className={styles.sortBySelect}>
-        <p>
-          Сортування за: <span>популярністю</span>
-        </p>
-      </div>
-      <div className={styles.select}>
-        <p>популярністю</p>
-        <p>ціною</p>
-        <p>алфавітом</p>
-      </div>
-    </div>
+    <>
+      <ul className={styles.sortByButtons}>
+        <li
+          className={activeItem === null ? styles.active : null}
+          onClick={() => setActiveItem(null)}
+        >
+          Всі
+        </li>
+        {categories.map((item) => (
+          <li
+            className={activeItem === item ? styles.active : null}
+            key={uuidv4()}
+            onClick={() => setActiveItem(item)}
+          >
+            {item}
+          </li>
+        ))}
+      </ul>
+    </>
   );
 };
 

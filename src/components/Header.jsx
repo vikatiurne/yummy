@@ -3,11 +3,12 @@ import { MdShoppingCart } from 'react-icons/md';
 import logo from '../assets/cake_logo.png';
 import styles from '../App.module.css';
 import Button from './UI/Button';
+import { Link } from 'react-router-dom';
 
 const Header = () => {
   return (
-    <div>
-      <div className={styles.logoWrapper}>
+    <div className={styles.logoWrapper}>
+      <Link to="/">
         <div className={styles.logo}>
           <img src={logo} alt="logo" />
           <div className={styles.logoName}>
@@ -15,12 +16,14 @@ const Header = () => {
             <p>найсмачніщі торти в світі</p>
           </div>
         </div>
-        <Button className={styles.basket} onclick={()=>{}}>
+      </Link>
+      <Link to="basket">
+        <Button className={styles.basket} onclick={() => {}}>
           <p>500 ₴</p>
           <MdShoppingCart className={styles.basketIcon} />
           <p>3</p>
         </Button>
-      </div>
+      </Link>
     </div>
   );
 };
