@@ -1,9 +1,8 @@
+import { useEffect, useState } from 'react';
+import axios from 'axios';
 
-import { FaPlus } from 'react-icons/fa';
+import { CakeCard, Categories, SortBy } from '../components';
 
-import { Categories, SortBy } from '../components';
-
-import weading from '../assets/weading.jpg';
 import styles from '../App.module.css';
 
 const categories = [
@@ -16,6 +15,18 @@ const categories = [
 
 const sortList = ['популярністю', 'ціною', 'алфавітом'];
 function Home() {
+  const [cakes, setCakes] = useState([]);
+
+  useEffect(() => {
+    axios
+      .get('http://localhost:3000/db.json')
+      .then((res) => setCakes(res.data.cakes));
+  }, []);
+
+  const renderCard = cakes.map((item) => {
+    return <CakeCard key={`${item.name}+${item.id}`} {...item} />;
+  });
+
   return (
     <>
       <div className={styles.sortBy}>
@@ -24,151 +35,7 @@ function Home() {
       </div>
       <div className={styles.containerContent}>
         <h2>Всі торти</h2>
-        <div className={styles.content}>
-          <div className={styles.card}>
-            <img src={weading} alt="weading cake" />
-            <h3>Весільний білий</h3>
-            <div className={styles.options}>
-              <p className={styles.option1}>з прикрасами</p>
-              <p className={styles.option2}>без прикрас</p>
-              <p className={styles.option3}>1кг</p>
-              <p className={styles.option4}>2кг</p>
-              <p className={styles.option5}>3кг</p>
-            </div>
-            <div className={styles.priceInfo}>
-              <p>від 700₴</p>
-              <button>
-                <FaPlus className={styles.iconPlus} /> Додати <span>20</span>
-              </button>
-            </div>
-          </div>
-
-          <div className={styles.card}>
-            <img src={weading} alt="weading cake" />
-            <h3>Весільний білий</h3>
-            <div className={styles.options}>
-              <p className={styles.option1}>з прикрасами</p>
-              <p className={styles.option2}>без прикрас</p>
-              <p className={styles.option3}>1кг</p>
-              <p className={styles.option4}>2кг</p>
-              <p className={styles.option5}>3кг</p>
-            </div>
-            <div className={styles.priceInfo}>
-              <p>від 700₴</p>
-              <button>
-                <FaPlus className={styles.iconPlus} /> Додати <span>20</span>
-              </button>
-            </div>
-          </div>
-
-          <div className={styles.card}>
-            <img src={weading} alt="weading cake" />
-            <h3>Весільний білий</h3>
-            <div className={styles.options}>
-              <p className={styles.option1}>з прикрасами</p>
-              <p className={styles.option2}>без прикрас</p>
-              <p className={styles.option3}>1кг</p>
-              <p className={styles.option4}>2кг</p>
-              <p className={styles.option5}>3кг</p>
-            </div>
-            <div className={styles.priceInfo}>
-              <p>від 700₴</p>
-              <button>
-                <FaPlus className={styles.iconPlus} /> Додати <span>20</span>
-              </button>
-            </div>
-          </div>
-
-          <div className={styles.card}>
-            <img src={weading} alt="weading cake" />
-            <h3>Весільний білий</h3>
-            <div className={styles.options}>
-              <p className={styles.option1}>з прикрасами</p>
-              <p className={styles.option2}>без прикрас</p>
-              <p className={styles.option3}>1кг</p>
-              <p className={styles.option4}>2кг</p>
-              <p className={styles.option5}>3кг</p>
-            </div>
-            <div className={styles.priceInfo}>
-              <p>від 700₴</p>
-              <button>
-                <FaPlus className={styles.iconPlus} /> Додати <span>20</span>
-              </button>
-            </div>
-          </div>
-
-          <div className={styles.card}>
-            <img src={weading} alt="weading cake" />
-            <h3>Весільний білий</h3>
-            <div className={styles.options}>
-              <p className={styles.option1}>з прикрасами</p>
-              <p className={styles.option2}>без прикрас</p>
-              <p className={styles.option3}>1кг</p>
-              <p className={styles.option4}>2кг</p>
-              <p className={styles.option5}>3кг</p>
-            </div>
-            <div className={styles.priceInfo}>
-              <p>від 700₴</p>
-              <button>
-                <FaPlus className={styles.iconPlus} /> Додати <span>20</span>
-              </button>
-            </div>
-          </div>
-
-          <div className={styles.card}>
-            <img src={weading} alt="weading cake" />
-            <h3>Весільний білий</h3>
-            <div className={styles.options}>
-              <p className={styles.option1}>з прикрасами</p>
-              <p className={styles.option2}>без прикрас</p>
-              <p className={styles.option3}>1кг</p>
-              <p className={styles.option4}>2кг</p>
-              <p className={styles.option5}>3кг</p>
-            </div>
-            <div className={styles.priceInfo}>
-              <p>від 700₴</p>
-              <button>
-                <FaPlus className={styles.iconPlus} /> Додати <span>20</span>
-              </button>
-            </div>
-          </div>
-
-          <div className={styles.card}>
-            <img src={weading} alt="weading cake" />
-            <h3>Весільний білий</h3>
-            <div className={styles.options}>
-              <p className={styles.option1}>з прикрасами</p>
-              <p className={styles.option2}>без прикрас</p>
-              <p className={styles.option3}>1кг</p>
-              <p className={styles.option4}>2кг</p>
-              <p className={styles.option5}>3кг</p>
-            </div>
-            <div className={styles.priceInfo}>
-              <p>від 700₴</p>
-              <button>
-                <FaPlus className={styles.iconPlus} /> Додати <span>20</span>
-              </button>
-            </div>
-          </div>
-
-          <div className={styles.card}>
-            <img src={weading} alt="weading cake" />
-            <h3>Весільний білий</h3>
-            <div className={styles.options}>
-              <p className={styles.option1}>з прикрасами</p>
-              <p className={styles.option2}>без прикрас</p>
-              <p className={styles.option3}>1кг</p>
-              <p className={styles.option4}>2кг</p>
-              <p className={styles.option5}>3кг</p>
-            </div>
-            <div className={styles.priceInfo}>
-              <p>від 700₴</p>
-              <button>
-                <FaPlus className={styles.iconPlus} /> Додати <span>20</span>
-              </button>
-            </div>
-          </div>
-        </div>
+        <div className={styles.content}>{renderCard}</div>
       </div>
     </>
   );
