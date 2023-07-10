@@ -1,4 +1,5 @@
-// import { ApiError } from '../error/apiError.js';
+import { validationResult } from 'express-validator';
+
 import { ApiError } from '../error/apiError.js';
 import { User, Basket } from '../models/models.js';
 import { userService } from '../service/user-service.js';
@@ -22,6 +23,10 @@ import { userService } from '../service/user-service.js';
 class UserController {
   async registration(req, res, next) {
     try {
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        next(ApiError.badRequest('Помилка валідації', errors.array()));
+      }
       const { email, password } = req.body;
       const userData = await userService.registration(email, password);
       res.cookie('refreshToken', userData.refreshToken, {
@@ -30,42 +35,53 @@ class UserController {
       });
       return res.json(userData);
     } catch (error) {
-      next(error)
+      next(error);
     }
   }
   async login(req, res, next) {
     try {
+      const { email, password } = req.body;
+      const userData = await userService.login(email, password);
+      res.cookie('refreshToken', userData.refreshToken, {
+        maxAge: 30 * 24 * 60 * 60 * 1000,
+        httpOnly: true,
+      });
+      return res.json(userData);
     } catch (error) {
-      next(error)
+      next(error);
     }
   }
   async logout(req, res, next) {
     try {
+      const {refreshToken} = req.cookies
+      const token = await userService.logout(refreshToken)
+      res.clearCookie('refreshToken')
+      return res.json(token)
     } catch (error) {
-      next(error)
+      next(error);
     }
   }
   async activate(req, res, next) {
     try {
-      const activationLink = req.params.link
-      await userService.activate(activationLink)
-      return res.redirect(process.env.CLIENT_URL)
+      const activationLink = req.params.link;
+      await userService.activate(activationLink);
+      return res.redirect(process.env.CLIENT_URL);
     } catch (error) {
-      next(error)
+      next(error);
     }
   }
   async refresh(req, res, next) {
     try {
     } catch (error) {
-      next(error)
+      next(error);
     }
   }
   async getUsers(req, res, next) {
-    const {id} = req.query
-    if(!id){
-      return next(ApiError.badRequest('нет id'))
+    const { id } = req.query;
+    if (!id) {
+      return next(ApiError.badRequest('нет id'));
     }
-    return res.json(id)
+    return res.json(id);
     // try {
     //   res.json(['123', '567']);
     // } catch (error) {}

@@ -2,7 +2,7 @@ export class ApiError extends Error {
   status;
   errors;
 
-  constructor(status, message, errors = []) {
+  constructor(status, message, errors) {
     super(message);
     (this.status = status), (this.errors = errors);
   }
@@ -11,7 +11,7 @@ export class ApiError extends Error {
     return new ApiError(401, 'Користувач не авторизован');
   }
 
-  static badRequest(message, errors) {
+  static badRequest(message, errors = []) {
     return new ApiError(404, message, errors);
   }
   static internal(message) {
