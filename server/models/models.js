@@ -5,7 +5,15 @@ const User = sequelize.define('user', {
   id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
   email: { type: DataTypes.STRING, unique: true },
   password: { type: DataTypes.STRING },
-  role: { type: DataTypes.STRING, defaultValue: 'USER' },
+  // role: { type: DataTypes.STRING, defaultValue: 'USER' },
+  isActivated: { type: DataTypes.BOOLEAN, defaultValue: false },
+  activationLink: { type: DataTypes.STRING },
+});
+
+const Token = sequelize.define('token', {
+  id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
+  userId: { type: DataTypes.INTEGER, references: { model: User, key: 'id' } },
+  refreshToken: { type: DataTypes.STRING, allowNull: false },
 });
 
 const Basket = sequelize.define('basket', {
@@ -45,12 +53,15 @@ const Rating = sequelize.define('rating', {
   rate: { type: DataTypes.INTEGER, allowNull: false },
 });
 
-const CategorySubcategory = sequelize.define('category_subcategory', {
-  id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
-});
+// const CategorySubcategory = sequelize.define('category_subcategory', {
+//   id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
+// });
 
 User.hasOne(Basket);
 Basket.belongsTo(User);
+
+User.hasOne(Token);
+Token.belongsTo(User);
 
 User.hasMany(Rating);
 Rating.belongsTo(User);
@@ -73,8 +84,8 @@ Prodact.belongsTo(Subcategory);
 Prodact.hasMany(ProdactInfo, { as: 'info' });
 ProdactInfo.belongsTo(Prodact);
 
-Category.belongsToMany(Subcategory, { through: CategorySubcategory });
-Subcategory.belongsTo(Category, { through: CategorySubcategory });
+Category.hasMany(Subcategory);
+Subcategory.belongsTo(Category);
 
 export {
   User,
@@ -85,4 +96,5 @@ export {
   ProdactInfo,
   Category,
   Subcategory,
+  Token,
 };
