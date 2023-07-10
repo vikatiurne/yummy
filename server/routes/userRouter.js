@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import { body } from 'express-validator';
 import { userController } from '../controllers/userController.js';
+import authMiddleware from '../middleware/AuthMiddleware.js';
 
 const router = new Router();
 
@@ -15,6 +16,6 @@ router.post('/logout', userController.logout);
 router.get('/activate/:link', userController.activate);
 // router.get('/auth', userController.check)
 router.get('/refresh', userController.refresh);
-router.get('/users', userController.getUsers);
+router.get('/users', authMiddleware, userController.getUsers);
 
 export { router as userRouter };
