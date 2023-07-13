@@ -1,25 +1,12 @@
 import { validationResult } from 'express-validator';
+import jwt from 'jsonwebtoken';
 
 import { ApiError } from '../error/apiError.js';
 import { User, Basket } from '../models/models.js';
 import { userService } from '../service/user-service.js';
+import { tokenService } from '../service/token-service.js';
+import { UserDto } from '../dtos/user-dto.js';
 
-// class UserController {
-//   async registration(req, res, next) {
-//     const {email, password, role} = req.body
-//     if(!email || !password){
-//       return next(ApiError.badRequest('Не вказан e-mail або пароль'))
-//     }
-//   }
-//   async login(req, res) {}
-//   async check(req, res, next) {
-//     const { id } = req.query;
-//     if (!id) {
-//       return next(ApiError.badRequest('задайте ID'));
-//     }
-//     res.json(id);
-//   }
-// }
 class UserController {
   async registration(req, res, next) {
     try {
@@ -27,8 +14,8 @@ class UserController {
       if (!errors.isEmpty()) {
         next(ApiError.badRequest('Помилка валідації', errors.array()));
       }
-      const { email, password } = req.body;
-      const userData = await userService.registration(email, password);
+      const { email, password, role } = req.body;
+      const userData = await userService.registration(email, password, role);
       res.cookie('refreshToken', userData.refreshToken, {
         maxAge: 30 * 24 * 60 * 60 * 1000,
         httpOnly: true,
@@ -83,13 +70,15 @@ class UserController {
       next(error);
     }
   }
-  async getUsers(req, res, next) {
-    try {
-      const users = await userService.getAllUsers();
-      return res.json(users);
-    } catch (error) {
-      next(error)
-    }
+ 
+  async check(req, res, next) {
+    const email = req.user.email;
+    const user = await User.findOne({ where: { email } });
+    const userDto = new UserDto(user);
+    const tokens = tokenService.generateTokens({ ...userDto });
+    await tokenService.saveToken(userDto.id, tokens.refreshToken);
+
+    return res.json({...tokens});
   }
 }
 

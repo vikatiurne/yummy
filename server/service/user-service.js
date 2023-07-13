@@ -6,10 +6,10 @@ import { User } from '../models/models.js';
 import { mailService } from './mail-service.js';
 import { tokenService } from './token-service.js';
 import { UserDto } from '../dtos/user-dto.js';
-import { where } from 'sequelize';
+
 
 class UserService {
-  async registration(email, password, next) {
+  async registration(email, password, role) {
     const candidate = await User.findOne({ where: { email } });
     if (candidate) {
       throw ApiError.badRequest(`Користувач з e-mail: ${email} вже існує`);
@@ -19,6 +19,7 @@ class UserService {
     const user = await User.create({
       email,
       password: hashPassword,
+      role,
       activationLink,
     });
 
