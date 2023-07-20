@@ -1,0 +1,18 @@
+.sortByButtons > li {
+    display: inline-block;
+    margin: 0.4rem;
+    padding: 1rem 1.5rem 1rem;
+    font-size: 1.1rem;
+    font-weight: 700;
+    border-radius: 1.8rem;
+    border: none;
+    background-color: #f9f9f9;
+    transition: all 0.5s;
+    cursor: pointer;
+    user-select: none;
+  }
+  
+  .sortByButtons .active {
+    background-color: #6d1e93;
+    color: white;
+  }

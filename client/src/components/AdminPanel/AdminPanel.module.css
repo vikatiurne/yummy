@@ -1,0 +1,4 @@
+.adminWrapper{
+   display: flex;
+   flex-direction: column;
+}
