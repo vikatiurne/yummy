@@ -3,6 +3,7 @@ import { DataTypes } from 'sequelize';
 
 const User = sequelize.define('user', {
   id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
+  name: {type: DataTypes.STRING, defaultValue:'User'},
   email: { type: DataTypes.STRING, unique: true },
   password: { type: DataTypes.STRING },
   role: { type: DataTypes.STRING, defaultValue: 'USER' },
@@ -14,6 +15,7 @@ const Token = sequelize.define('token', {
   id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
   userId: { type: DataTypes.INTEGER, references: { model: User, key: 'id' } },
   refreshToken: { type: DataTypes.STRING, allowNull: false },
+  accessToken: { type: DataTypes.STRING, allowNull: false },
 });
 
 const Basket = sequelize.define('basket', {

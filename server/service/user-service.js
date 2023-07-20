@@ -2,14 +2,13 @@ import bcrypt from 'bcrypt';
 import { v4 as uuidv4 } from 'uuid';
 
 import { ApiError } from '../error/apiError.js';
-import { User } from '../models/models.js';
+import { Token, User } from '../models/models.js';
 import { mailService } from './mail-service.js';
 import { tokenService } from './token-service.js';
 import { UserDto } from '../dtos/user-dto.js';
 
-
 class UserService {
-  async registration(email, password, role) {
+  async registration(email, password, role, name) {
     const candidate = await User.findOne({ where: { email } });
     if (candidate) {
       throw ApiError.badRequest(`Користувач з e-mail: ${email} вже існує`);
@@ -17,6 +16,7 @@ class UserService {
     const hashPassword = await bcrypt.hash(password, 3);
     const activationLink = uuidv4();
     const user = await User.create({
+      name,
       email,
       password: hashPassword,
       role,
@@ -30,7 +30,12 @@ class UserService {
 
     const userDto = new UserDto(user);
     const tokens = tokenService.generateTokens({ ...userDto });
-    await tokenService.saveToken(userDto.id, tokens.refreshToken);
+    // await tokenService.saveToken(userDto.id, tokens.refreshToken);
+    await tokenService.saveToken(
+      userDto.id,
+      tokens.refreshToken,
+      tokens.accessToken
+    );
 
     return { ...tokens, user: userDto };
   }
@@ -53,7 +58,11 @@ class UserService {
     }
     const userDto = new UserDto(user);
     const tokens = tokenService.generateTokens({ ...userDto });
-    await tokenService.saveToken(userDto.id, tokens.refreshToken);
+    await tokenService.saveToken(
+      userDto.id,
+      tokens.refreshToken,
+      tokens.accessToken
+    );
 
     return { ...tokens, user: userDto };
   }
@@ -71,7 +80,7 @@ class UserService {
     if (!tokenFromDb || !userData) {
       throw ApiError.unauthorizedError();
     }
-    const user = await User.findByPk(userData.id)
+    const user = await User.findByPk(userData.id);
     const userDto = new UserDto(user);
     const tokens = tokenService.generateTokens({ ...userDto });
     await tokenService.saveToken(userDto.id, tokens.refreshToken);
@@ -79,9 +88,11 @@ class UserService {
     return { ...tokens, user: userDto };
   }
 
-  async getAllUsers(){
-    const users = await User.findAll()
-    return users
+  async getUser(token) {
+    const tokenData = await tokenService.findAccessToken(token);
+    const user = await User.findByPk(tokenData.userId);
+    const userDto = new UserDto(user);
+    return userDto;
   }
 }
 

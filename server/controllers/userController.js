@@ -14,8 +14,13 @@ class UserController {
       if (!errors.isEmpty()) {
         next(ApiError.badRequest('Помилка валідації', errors.array()));
       }
-      const { email, password, role } = req.body;
-      const userData = await userService.registration(email, password, role);
+      const { email, password, role, name } = req.body;
+      const userData = await userService.registration(
+        email,
+        password,
+        role,
+        name
+      );
       res.cookie('refreshToken', userData.refreshToken, {
         maxAge: 30 * 24 * 60 * 60 * 1000,
         httpOnly: true,
@@ -70,7 +75,7 @@ class UserController {
       next(error);
     }
   }
- 
+
   async check(req, res, next) {
     const email = req.user.email;
     const user = await User.findOne({ where: { email } });
@@ -78,7 +83,19 @@ class UserController {
     const tokens = tokenService.generateTokens({ ...userDto });
     await tokenService.saveToken(userDto.id, tokens.refreshToken);
 
-    return res.json({...tokens});
+    return res.json({ ...tokens });
+  }
+
+  async getUser(req, res, next) {
+    try {
+      const autorizationHeader =  req.headers.authorization;
+      const token =  autorizationHeader.split(' ')[1];
+      const user = await userService.getUser(token);
+
+      return res.json(user);
+    } catch (error) {
+      next(error);
+    }
   }
 }
 
