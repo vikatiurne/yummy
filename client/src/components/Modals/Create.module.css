@@ -1,0 +1,16 @@
+.modalTitle {
+    margin-bottom: 0.5rem;
+  font-size: 1.2rem;
+}
+.modalConternt form{
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+}
+.modalConternt form input {
+  padding: 0.5rem;
+}
+.add{
+    text-transform: uppercase;
+}

@@ -6,7 +6,6 @@ import { store } from './app/store';
 
 import './index.css';
 
-// console.log(process.env.REACT_APP_API_URL)
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(

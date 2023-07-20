@@ -7,7 +7,8 @@ import { fetchAutoLogin } from './pages/Auth/AuthSlice';
 
 function App() {
   const dispatch = useDispatch();
-  console.log(useSelector(state=>state.auth.user))
+  const isAuth = useSelector((state) => state.auth.isAuth);
+ 
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -20,7 +21,7 @@ function App() {
         <Route path="/*" element={<MainLayout />}>
           <Route index element={<Home />} />
           <Route path="basket" element={<Basket />} />
-          <Route path="auth" element={<Auth />} />
+          {!isAuth && <Route path="auth" element={<Auth />} />}
         </Route>
       </Routes>
     </BrowserRouter>

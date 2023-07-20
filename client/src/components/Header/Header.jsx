@@ -6,14 +6,13 @@ import { IoPerson } from 'react-icons/io5';
 import logo from '../../assets/cake_logo.png';
 
 import styles from './Header.module.css';
-import Button from '../UI/Button';
+import Button from '../UI/Button/Button';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchLogout } from '../../pages/Auth/AuthSlice';
 
 const Header = () => {
   const isAuth = useSelector((state) => state.auth.isAuth);
   const userName = useSelector((state) => state.auth.user.name);
-  console.log(useSelector((state) => state.auth.user))
   const dispatch = useDispatch();
 
   const logoutHandler = () => {
