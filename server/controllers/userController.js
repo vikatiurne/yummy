@@ -13,19 +13,20 @@ class UserController {
       const errors = validationResult(req);
       if (!errors.isEmpty()) {
         next(ApiError.badRequest('Помилка валідації', errors.array()));
+      } else {
+        const { email, password, role, name } = req.body;
+        const userData = await userService.registration(
+          email,
+          password,
+          role,
+          name
+        );
+        res.cookie('refreshToken', userData.refreshToken, {
+          maxAge: 30 * 24 * 60 * 60 * 1000,
+          httpOnly: true,
+        });
+        return res.json(userData);
       }
-      const { email, password, role, name } = req.body;
-      const userData = await userService.registration(
-        email,
-        password,
-        role,
-        name
-      );
-      res.cookie('refreshToken', userData.refreshToken, {
-        maxAge: 30 * 24 * 60 * 60 * 1000,
-        httpOnly: true,
-      });
-      return res.json(userData);
     } catch (error) {
       next(error);
     }
@@ -88,8 +89,8 @@ class UserController {
 
   async getUser(req, res, next) {
     try {
-      const autorizationHeader =  req.headers.authorization;
-      const token =  autorizationHeader.split(' ')[1];
+      const autorizationHeader = req.headers.authorization;
+      const token = autorizationHeader.split(' ')[1];
       const user = await userService.getUser(token);
 
       return res.json(user);

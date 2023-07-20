@@ -2,7 +2,7 @@ import bcrypt from 'bcrypt';
 import { v4 as uuidv4 } from 'uuid';
 
 import { ApiError } from '../error/apiError.js';
-import { Token, User } from '../models/models.js';
+import { User } from '../models/models.js';
 import { mailService } from './mail-service.js';
 import { tokenService } from './token-service.js';
 import { UserDto } from '../dtos/user-dto.js';
@@ -30,7 +30,6 @@ class UserService {
 
     const userDto = new UserDto(user);
     const tokens = tokenService.generateTokens({ ...userDto });
-    // await tokenService.saveToken(userDto.id, tokens.refreshToken);
     await tokenService.saveToken(
       userDto.id,
       tokens.refreshToken,
