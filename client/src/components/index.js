@@ -7,3 +7,8 @@ export { default as AdminPanel } from './AdminPanel/AdminPanel';
 export { default as CreateCategory } from './Modals/CreateCategory';
 export { default as CreateSubcategory } from './Modals/CreateSubcategory';
 export { default as CreateProdact } from './Modals/CreateProdact';
+export { default as Button } from '../components/UI/Button/Button';
+export { default as Select } from '../components/UI/Select/Select';
+export { default as Modal } from '../components/UI/Modal/Modal';
+export { default as Input } from '../components/UI/Input/Input';
+

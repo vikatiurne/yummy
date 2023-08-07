@@ -2,7 +2,7 @@
    display: flex;
    flex-direction: column;
 }
-.toggleAdminPanel{
+.openAdminPanel{
    margin: 1rem auto 0;
    padding: 0.5rem;
    font-size: 1.2rem;
@@ -11,17 +11,6 @@
    transition: all 0.3s ease-in-out;
 }
 
-.adminOptions{
-   margin: 0 auto;
-}
-.adminOptions button{
-   padding: 0.3rem;
-   margin: 0.5rem;
-   font-size: 1.1rem;
-   transition: all 0.3s ease-in-out;
-}
-.toggleAdminPanel:hover,
-.adminOptions button:hover{
-   background-color:#6d1e93;
-   color: white;
+.openAdminPanel:hover{
+   background-color:#e1a8fb;
 }

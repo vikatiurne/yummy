@@ -1,11 +1,11 @@
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { Navigate } from 'react-router-dom';
 
 import { fetchLogin, fetchRegistration } from '../../pages/Auth/AuthSlice';
 import Button from '../UI/Button/Button';
+import AuthModal from '../Modals/AuthModal';
 import styles from './LoginForm.module.css';
-import { Link } from 'react-router-dom';
-import Modal from '../UI/Modal/Modal';
 
 const LoginForm = () => {
   const [email, setEmail] = useState('');
@@ -16,7 +16,7 @@ const LoginForm = () => {
 
   const dispatch = useDispatch();
 
-  const err = useSelector((state) => state.auth.error);
+  const isAuth = useSelector((state) => state.auth.isAuth);
 
   const emailHandler = (e) => setEmail(e.target.value);
   const passwordHandler = (e) => setPassword(e.target.value);
@@ -24,15 +24,12 @@ const LoginForm = () => {
 
   const loginHandler = () => {
     dispatch(fetchLogin({ email, password }));
-    setEmail('');
-    setPassword('');
-    setModalActive(true);
+    if (!isAuth) setModalActive(true);
   };
+
   const registrationHandler = () => {
     dispatch(fetchRegistration({ email, password, name }));
-    setEmail('');
-    setPassword('');
-    setName('');
+    if (!isAuth) setModalActive(true);
   };
 
   const registerLinkHandler = () => setRegistr(true);
@@ -67,30 +64,22 @@ const LoginForm = () => {
       </div>
       <div className={styles.formControl}>
         {!registr ? (
-          <Link to="/">
-            <Button className={styles.success} onclick={loginHandler}>
-              Увійти
-            </Button>
-          </Link>
+          <Button className={styles.success} onclick={loginHandler}>
+            Увійти
+          </Button>
         ) : (
-          <Link to="/auth">
-            <Button className={styles.primary} onclick={registrationHandler}>
-              Зареєструватися
-            </Button>
-          </Link>
+          <Button className={styles.primary} onclick={registrationHandler}>
+            Зареєструватися
+          </Button>
         )}
       </div>
     </form>
   );
 
-  return (
+  const render = (
     <>
       {renderForm}
-
-      <Modal active={modalActive} setActive={() => setModalActive()}>
-        <p>{err}</p>
-      </Modal>
-
+      <AuthModal active={modalActive} setActive={() => setModalActive(false)} />
       {!registr ? (
         <p className={styles.registrLink}>
           Немає акаунту?{' '}
@@ -103,6 +92,7 @@ const LoginForm = () => {
       )}
     </>
   );
+  return !isAuth ? render : <Navigate to="/" />;
 };
 
 export default LoginForm;

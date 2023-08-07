@@ -7,11 +7,7 @@
   flex-wrap: wrap;
 }
 
-.containerContent h2 {
-  margin-bottom: 2rem;
-  font-size: 1.5rem;
-  font-weight: bold;
-}
+
 .content {
   display: grid;
   grid-template-columns: repeat(4, 1fr);

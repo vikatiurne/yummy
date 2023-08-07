@@ -1,19 +1,19 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
+
 import MainLayout from './hoc/Layuot/MainLayout';
-import { Auth, Basket, Home } from './pages';
-import { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { Admin, Auth, Basket, Home, Prodact } from './pages';
+import { useDispatch } from 'react-redux';
 import { fetchAutoLogin } from './pages/Auth/AuthSlice';
+import { useEffect } from 'react';
 
 function App() {
+
   const dispatch = useDispatch();
-  const isAuth = useSelector((state) => state.auth.isAuth);
- 
 
   useEffect(() => {
     const token = localStorage.getItem('token');
     if (!!token) dispatch(fetchAutoLogin(token));
-  }, [dispatch]);
+  });
 
   return (
     <BrowserRouter>
@@ -21,7 +21,9 @@ function App() {
         <Route path="/*" element={<MainLayout />}>
           <Route index element={<Home />} />
           <Route path="basket" element={<Basket />} />
-          {!isAuth && <Route path="auth" element={<Auth />} />}
+          <Route path="prodact/:id" element={<Prodact />} />
+          <Route path="auth" element={<Auth />} />
+          <Route path="admin" element={<Admin />} />
         </Route>
       </Routes>
     </BrowserRouter>

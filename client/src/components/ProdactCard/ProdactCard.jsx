@@ -4,9 +4,10 @@ import { FaPlus } from 'react-icons/fa';
 
 import styles from './ProdactCard.module.css';
 
-const CakeCard = ({ img, name, sizes, price, rating }) => {
+const CakeCard = ({ img, name, sizes, price, rating, onclick }) => {
   const [activeSize, setActiveSize] = useState(sizes[0]);
 
+ 
   const renderSizes = sizes.map((size, i) => (
     <li
       key={i}
@@ -18,7 +19,7 @@ const CakeCard = ({ img, name, sizes, price, rating }) => {
   ));
 
   return (
-    <div className={styles.card}>
+    <div className={styles.card} onClick={onclick}>
       <img src={process.env.REACT_APP_API_URL + img} alt={name} />
       <h3>{name}</h3>
       <ul className={styles.options}>

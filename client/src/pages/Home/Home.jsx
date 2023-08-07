@@ -1,21 +1,24 @@
 import { useEffect, useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
-import { ProdactCard, Categories, SortBy } from '../../components';
+import { ProdactCard, Categories } from '../../components';
+
+import { fetchGetCategory, fetchGetSubcategory } from './HomeSlice';
 
 import styles from './Home.module.css';
 
-// const categories = [
-//   'День Народження',
-//   'Весілля',
-//   'Хрещення',
-//   'Для неї',
-//   'Для нього',
-// ];
-
-const sortList = ['популярністю', 'ціною', 'алфавітом'];
 function Home() {
   const [prodacts, setProdacts] = useState([]);
+
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    dispatch(fetchGetCategory());
+    dispatch(fetchGetSubcategory());
+  }, [dispatch]);
 
   useEffect(() => {
     axios
@@ -23,20 +26,27 @@ function Home() {
       .then((res) => setProdacts(res.data.rows));
   }, []);
 
+  const redirectHandler = (id) => {
+    navigate('/prodact/' + id);
+  };
+
   const renderCard = prodacts.map((item) => {
-    return <ProdactCard key={`${item.name}+${item.id}`} {...item} />;
+    return (
+      <ProdactCard
+        key={`${item.name}+${item.id}`}
+        {...item}
+        onclick={() => redirectHandler(item.id)}
+      />
+    );
   });
 
   return (
     <>
       <div className={styles.sortBy}>
         <Categories />
-        <SortBy sortList={sortList} />
       </div>
-      <div className={styles.containerContent}>
-        <h2>Всі торти</h2>
-        <div className={styles.content}>{renderCard}</div>
-      </div>
+
+      <div className={styles.content}>{renderCard}</div>
     </>
   );
 }

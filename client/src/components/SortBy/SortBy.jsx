@@ -4,7 +4,8 @@ import { v4 as uuidv4 } from 'uuid';
 
 import styles from './SortBy.module.css';
 
-const SortBy = ({ sortList }) => {
+const sortList = ['популярністю', 'ціною', 'алфавітом'];
+const SortBy = () => {
   const [visibleSelectList, setVisibleSelectList] = useState(false);
   const [activeItem, setActiveItem] = useState(null);
   const sortRef = useRef();

@@ -1,0 +1,72 @@
+.modalTitle {
+  margin-bottom: 0.5rem;
+  font-size: 1.2rem;
+}
+.modalContent form {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+}
+.modalContent form input {
+  margin: 0.5rem;
+  padding: 0.3rem;
+  font-size: 1.1rem;
+}
+.modalContent form textarea {
+  margin: 0.5rem 0 0.5rem;
+  border-radius: 5px;
+  max-width: calc(100% - 10vw);
+  width: 100%;
+  height: 20vh;
+  resize: none;
+  padding: 0.3rem;
+  font-size: 1rem;
+}
+.add,
+.authModal button {
+  text-transform: uppercase;
+}
+.authModal p {
+  margin-bottom: 0.5rem;
+  font-size: 1.2rem;
+}
+.selectCategory {
+  margin: 0.5rem;
+}
+.subcategoryList {
+  text-align: left;
+}
+.subcategoryList p {
+  font-size: 1.1rem;
+  text-decoration: underline;
+}
+.sizes,
+.options,
+.priceName {
+  display: flex;
+  flex-wrap: wrap;
+}
+.sizes input {
+  max-width: 5rem;
+}
+input[type="file"] {
+  display: none;
+}
+.fileUpload {
+  margin: 0.5rem 0 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  display: inline-block;
+  padding: 6px 12px;
+  cursor: pointer;
+}
+.fileUpload:hover{
+  background-color: blueviolet;
+  border: 1px solid blueviolet;
+}
+.iconDownload{
+  margin-left: 0.3rem;
+  font-size: 1.1rem;
+}

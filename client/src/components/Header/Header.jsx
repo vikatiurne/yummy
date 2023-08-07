@@ -26,7 +26,9 @@ const Header = () => {
             <p>Вхід</p>
           </Link>
         ) : (
-          <p onClick={logoutHandler}>Вихід</p>
+          <Link to="/">
+            <p onClick={logoutHandler}>Вихід</p>
+          </Link>
         )}
         {!isAuth ? (
           <IoPerson className={styles.basketIcon} onClick={logoutHandler} />

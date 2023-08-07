@@ -49,10 +49,12 @@ const authSlice = createSlice({
         state.error = null
         state.isAuth = true;
         state.user = payload.data.user;
+        console.log(payload.data.accessToken)
         localStorage.setItem('token', payload.data.accessToken);
       })
       .addCase(fetchLogin.rejected, (state, { payload }) => {
         state.status = 'error';
+        console.log(payload)
         state.error = payload.message;
       })
       .addCase(fetchRegistration.pending, (state) => {
@@ -60,6 +62,7 @@ const authSlice = createSlice({
       })
       .addCase(fetchRegistration.fulfilled, (state, { payload }) => {
         state.status = 'success';
+        state.error = null
         state.isAuth = true;
         state.user = payload.data.user;
         localStorage.setItem('token', payload.data.accessToken);
@@ -76,6 +79,7 @@ const authSlice = createSlice({
       })
       .addCase(fetchLogout.fulfilled, (state) => {
         state.status = 'success';
+        state.error = null
         state.isAuth = false;
         state.user = {};
         localStorage.removeItem('token');
@@ -88,6 +92,7 @@ const authSlice = createSlice({
       })
       .addCase(fetchAutoLogin.fulfilled, (state, { payload }) => {
         state.user = payload.data;
+        state.error = null
         state.isAuth = true;
       })
       .addCase(fetchAutoLogin.rejected, (state) => {
