@@ -23,8 +23,6 @@ const CreateProdact = ({ active, setActive }) => {
   const [file, setFile] = useState(null);
   const [fileName, setFileName] = useState('');
 
-  console.log(info)
-
   const dispatch = useDispatch();
 
   const categories = useSelector((state) => state.home.category);

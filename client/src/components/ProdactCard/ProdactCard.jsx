@@ -1,13 +1,12 @@
 import { useState } from 'react';
 import PropTypes from 'prop-types';
-import { FaPlus } from 'react-icons/fa';
+import { FaPlus, FaLongArrowAltRight, FaStar } from 'react-icons/fa';
 
 import styles from './ProdactCard.module.css';
 
 const CakeCard = ({ img, name, sizes, price, rating, onclick }) => {
   const [activeSize, setActiveSize] = useState(sizes[0]);
 
- 
   const renderSizes = sizes.map((size, i) => (
     <li
       key={i}
@@ -19,7 +18,7 @@ const CakeCard = ({ img, name, sizes, price, rating, onclick }) => {
   ));
 
   return (
-    <div className={styles.card} onClick={onclick}>
+    <div className={styles.card}>
       <img src={process.env.REACT_APP_API_URL + img} alt={name} />
       <h3>{name}</h3>
       <ul className={styles.options}>
@@ -31,6 +30,16 @@ const CakeCard = ({ img, name, sizes, price, rating, onclick }) => {
         <button>
           <FaPlus className={styles.iconPlus} /> Додати <span>20</span>
         </button>
+      </div>
+      <div className={styles.footerCard}>
+        <div className={styles.moreInfo} onClick={onclick}>
+          <p>докладніше...</p>
+          <FaLongArrowAltRight />
+        </div>
+        <div className={styles.rating}>
+          <p>5</p>
+          <FaStar className={styles.star}/>
+        </div>
       </div>
     </div>
   );

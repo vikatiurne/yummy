@@ -11,4 +11,4 @@ export { default as Button } from '../components/UI/Button/Button';
 export { default as Select } from '../components/UI/Select/Select';
 export { default as Modal } from '../components/UI/Modal/Modal';
 export { default as Input } from '../components/UI/Input/Input';
-
+export { default as Pagination } from '../components/Pagination/Pagination';

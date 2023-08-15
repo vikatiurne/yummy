@@ -55,7 +55,15 @@
   background-color: #f4dbfd;
 }
 .containerContent h2 {
-  margin-bottom: 2rem;
+  margin-bottom: 1rem;
   font-size: 1.5rem;
   font-weight: bold;
+}
+.content{
+  padding-top: 1rem;
+    gap: 3rem;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
 }

@@ -1,39 +1,61 @@
 import { useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { BsTriangleFill } from 'react-icons/bs';
 import { v4 as uuidv4 } from 'uuid';
 
 import styles from './Categories.module.css';
 import SortBy from '../SortBy/SortBy';
+import { useNavigate } from 'react-router-dom';
+import { ProdactCard } from '..';
+import {
+  selectedCategory,
+  selectedSubcategory,
+} from '../../pages/Home/HomeSlice';
 
 const Categories = () => {
   const [activeItem, setActiveItem] = useState(null);
   const [visibleSubcategoryList, setVisibleSubcategoryList] = useState(false);
   const [selectedSort, setSelectedSort] = useState('Вся випічка');
   const [subcategory, setSubcategory] = useState('');
-  const [categoryId, setCategoryId] = useState(null);
 
   const categories = useSelector((state) => state.home.category);
+  const categoryId = useSelector((state) => state.home.categoryId);
   const subcategories = useSelector((state) => state.home.subcategory);
+  const prodacts = useSelector((state) => state.home.prodacts);
+
+  const dispatch = useDispatch();
+
+  const navigate = useNavigate();
+
+  const clickAllCategoryHandler = () => {
+    setActiveItem(null);
+    dispatch(selectedCategory(null));
+    setSubcategory('');
+  };
 
   const clickCategoryHandler = (name, id) => {
     setActiveItem(name);
     setSelectedSort(name);
     setSubcategory('');
-    setCategoryId(id);
+    dispatch(selectedCategory(id));
+    dispatch(selectedSubcategory(null));
   };
 
-  const clickSubcategoryHandler = (name) => {
+  const clickSubcategoryHandler = (name, id) => {
     setSubcategory(name);
     setVisibleSubcategoryList(false);
+    dispatch(selectedSubcategory(id));
   };
 
-  const rendersubcategory = (
+  const renderSubcategory = (
     <ul className={styles.select}>
       {subcategories
         .filter((item) => item.categoryId === categoryId)
         .map((item) => (
-          <li key={uuidv4()} onClick={() => clickSubcategoryHandler(item)}>
+          <li
+            key={uuidv4()}
+            onClick={() => clickSubcategoryHandler(item, item.id)}
+          >
             {item.name}
           </li>
         ))}
@@ -56,16 +78,30 @@ const Categories = () => {
           />
         )}
       </li>
-      {visibleSubcategoryList && activeItem === item.name && rendersubcategory}
+      {visibleSubcategoryList && activeItem === item.name && renderSubcategory}
     </div>
   ));
+
+  const redirectHandler = (id) => {
+    navigate('/prodact/' + id);
+  };
+
+  const renderCard = prodacts.map((item) => {
+    return (
+      <ProdactCard
+        key={`${item.name}+${item.id}`}
+        {...item}
+        onclick={() => redirectHandler(item.id)}
+      />
+    );
+  });
 
   return (
     <>
       <ul className={styles.sortByButtons}>
         <li
           className={activeItem === null ? styles.active : null}
-          onClick={() => setActiveItem(null)}
+          onClick={clickAllCategoryHandler}
         >
           Всі
         </li>
@@ -76,8 +112,9 @@ const Categories = () => {
           {activeItem === null ? 'Вся випічка' : selectedSort}
           {!!subcategory ? ` (${subcategory.name})` : null}
         </h2>
-        <SortBy />
       </div>
+        <SortBy />
+      <div className={styles.content}>{renderCard}</div>
     </>
   );
 };
