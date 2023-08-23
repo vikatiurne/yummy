@@ -8,7 +8,7 @@ class ProdactController {
   async create(req, res, next) {
     try {
       const { name, price, categoryId, subcategoryId, sizes, info } = req.body;
-
+      const sizesArr = sizes.split(',');
       const { img } = req.files;
       let fileName = uuidv4() + '.jpg';
       const __dirname = path.dirname('..');
@@ -19,63 +19,99 @@ class ProdactController {
         price,
         categoryId,
         subcategoryId,
-        sizes,
+        sizes: sizesArr,
         img: fileName,
       });
-
-      if (info) {
-        info = JSON.parse(info);
-        info.forEach((el) =>
-          ProdactInfo.create({
-            title: el.title,
-            description: el.description,
-            prodactId: prodact.id,
-          })
-        );
+      if (info.length > 0) {
+        await ProdactInfo.create({
+          discription: info,
+          prodactId: prodact.id,
+        });
       }
 
-      return res.json(prodact);
+      return await res.json(prodact);
     } catch (error) {
-      next(ApiError.badRequest(error.message));
+      next(ApiError.badRequest(error));
     }
   }
   async getAll(req, res) {
-    let { categoryId, subcategoryId, limit, page } = req.query;
+    let {
+      categoryId,
+      subcategoryId,
+      limit,
+      page,
+      orderBy,
+      sortBy = 'ASC',
+    } = req.query;
     page = page || 1;
     limit = limit || 8;
-    let offset = page * limit - limit;
+    let offset = (page - 1) * limit;
+    // let offset = page * limit - limit;
     let prodacts;
+    const queries = {
+      offset,
+      limit,
+    };
+    if (orderBy) {
+      queries.order = [[orderBy, sortBy]];
+    }
     if (!categoryId && !subcategoryId) {
-      prodacts = await Prodact.findAndCountAll({ limit, offset });
+      prodacts = await Prodact.findAndCountAll({ ...queries });
     }
     if (categoryId && !subcategoryId) {
       prodacts = await Prodact.findAndCountAll({
         where: { categoryId },
-        limit,
-        offset,
-      });
-    }
-    if (!categoryId && subcategoryId) {
-      prodacts = await Prodact.findAndCountAll({
-        offset,
+        ...queries,
       });
     }
     if (categoryId && subcategoryId) {
       prodacts = await Prodact.findAndCountAll({
         where: { categoryId, subcategoryId },
-        limit,
-        offset,
+        ...queries,
       });
     }
-    return res.json(prodacts);
+
+    return await res.json(prodacts);
   }
+
+  // async getAll(req, res) {
+  //   let { categoryId, subcategoryId, limit, page } = req.query;
+  //   page = page || 1;
+  //   limit = limit || 8;
+  //   let offset = page * limit - limit;
+  //   let prodacts;
+  //   if (!categoryId && !subcategoryId) {
+  //     prodacts = await Prodact.findAndCountAll({ limit, offset });
+  //   }
+  //   if (categoryId && !subcategoryId) {
+  //     prodacts = await Prodact.findAndCountAll({
+  //       where: { categoryId },
+  //       limit,
+  //       offset,
+  //     });
+  //   }
+  //   if (!categoryId && subcategoryId) {
+  //     prodacts = await Prodact.findAndCountAll({
+  //       offset,
+  //     });
+  //   }
+  //   if (categoryId && subcategoryId) {
+  //     prodacts = await Prodact.findAndCountAll({
+  //       where: { categoryId, subcategoryId },
+  //       limit,
+  //       offset,
+  //     });
+  //   }
+
+  //   return await res.json(prodacts);
+  // }
   async getOne(req, res) {
-    const {id} = req.params
+    const { id } = req.params;
     const prodact = await Prodact.findOne({
-      where:{id},
-      include: [{model: ProdactInfo, as: 'info'}]
-    })
-    return res.json(prodact)
+      where: { id },
+      include: { model: ProdactInfo, as: 'info' },
+    });
+    return res.json(prodact);
   }
 }
 

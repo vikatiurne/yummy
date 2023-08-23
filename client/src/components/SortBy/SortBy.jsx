@@ -3,12 +3,17 @@ import { BsTriangleFill } from 'react-icons/bs';
 import { v4 as uuidv4 } from 'uuid';
 
 import styles from './SortBy.module.css';
+import { useDispatch } from 'react-redux';
+import { selectedSortBy } from '../../pages/Home/HomeSlice';
 
 const sortList = ['популярністю', 'ціною', 'алфавітом'];
+
 const SortBy = () => {
   const [visibleSelectList, setVisibleSelectList] = useState(false);
   const [activeItem, setActiveItem] = useState(null);
   const sortRef = useRef();
+
+  const dispatch = useDispatch();
 
   const toggleVisibleList = () => {
     setVisibleSelectList((prev) => !prev);
@@ -17,6 +22,12 @@ const SortBy = () => {
   const handleClickItem = (item) => {
     setActiveItem(item);
     setVisibleSelectList(false);
+    let sortBy = '';
+    if (item === 'популярністю') sortBy = 'rating';
+    if (item === 'ціною') sortBy = 'price';
+    if (item === 'алфавітом') sortBy = 'name';
+    console.log(sortBy)
+    dispatch(selectedSortBy(sortBy));
   };
 
   const handleOutsideClick = (e) => {

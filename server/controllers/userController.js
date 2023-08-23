@@ -82,7 +82,11 @@ class UserController {
     const user = await User.findOne({ where: { email } });
     const userDto = new UserDto(user);
     const tokens = tokenService.generateTokens({ ...userDto });
-    await tokenService.saveToken(userDto.id, tokens.refreshToken);
+    await tokenService.saveToken(
+      userDto.id,
+      tokens.refreshToken,
+      tokens.accessToken
+    );
 
     return res.json({ ...tokens });
   }

@@ -3,7 +3,7 @@ import { DataTypes } from 'sequelize';
 
 const User = sequelize.define('user', {
   id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
-  name: {type: DataTypes.STRING, defaultValue:'User'},
+  name: { type: DataTypes.STRING, defaultValue: 'User' },
   email: { type: DataTypes.STRING, unique: true },
   password: { type: DataTypes.STRING },
   role: { type: DataTypes.STRING, defaultValue: 'USER' },
@@ -46,8 +46,7 @@ const Subcategory = sequelize.define('subcategory', {
 
 const ProdactInfo = sequelize.define('prodact_info', {
   id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
-  title: { type: DataTypes.STRING, unique: true, allowNull: false },
-  discription: { type: DataTypes.STRING, allowNull: false },
+  discription: { type: DataTypes.STRING },
 });
 
 const Rating = sequelize.define('rating', {

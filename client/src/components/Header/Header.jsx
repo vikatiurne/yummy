@@ -53,7 +53,7 @@ const Header = () => {
         )}
       </Button>
 
-      <Link to="/">
+      <Link to="..">
         <div className={styles.logo}>
           <img src={logo} alt="logo" />
           <div className={styles.logoName}>

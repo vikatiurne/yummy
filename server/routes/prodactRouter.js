@@ -4,8 +4,8 @@ import checkRoleMiddleware from '../middleware/CheckRoleMiddleware.js';
 
 const router = new Router();
 
-router.post('/',checkRoleMiddleware('ADMIN'), prodactController.create);
+router.post('/', checkRoleMiddleware('ADMIN'), prodactController.create);
 router.get('/', prodactController.getAll);
 router.get('/:id', prodactController.getOne);
 
-export {router as prodactRouter}
+export { router as prodactRouter };

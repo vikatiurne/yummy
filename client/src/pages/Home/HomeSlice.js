@@ -11,20 +11,27 @@ const initialState = {
   count: null,
   limit: 8,
   page: 1,
+  sortBy: '',
 };
 
 export const fetchGetCategory = createAsyncThunk(
-  'admin/fetchGetCategory',
+  'home/fetchGetCategory',
   async () => await GetServices.getCategories()
 );
 export const fetchGetSubcategory = createAsyncThunk(
-  'admin/fetchGetSubcategory',
+  'home/fetchGetSubcategory',
   async () => await GetServices.getSubcategories()
 );
 export const fetchGetAllProdact = createAsyncThunk(
-  'admin/fetchGetAllProdact',
-  async ({categoryId, subcategoryId, page, limit}) =>
-    await GetServices.getAllProdacts(categoryId, subcategoryId, page, limit)
+  'home/fetchGetAllProdact',
+  async ({ categoryId, subcategoryId, page, limit, orderBy }) =>
+    await GetServices.getAllProdacts(
+      categoryId,
+      subcategoryId,
+      page,
+      limit,
+      orderBy
+    )
 );
 
 const HomeSlice = createSlice({
@@ -46,6 +53,11 @@ const HomeSlice = createSlice({
         state.limit = payload;
       },
     },
+    selectedSortBy: {
+      reducer(state, { payload }) {
+        state.sortBy = payload;
+      },
+    },
   },
   extraReducers(builder) {
     builder
@@ -62,6 +74,10 @@ const HomeSlice = createSlice({
   },
 });
 
-export const { selectedCategory, selectedSubcategory, selectedLimit } =
-  HomeSlice.actions;
+export const {
+  selectedCategory,
+  selectedSubcategory,
+  selectedLimit,
+  selectedSortBy,
+} = HomeSlice.actions;
 export default HomeSlice.reducer;

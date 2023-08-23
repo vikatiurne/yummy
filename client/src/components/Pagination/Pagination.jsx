@@ -13,10 +13,13 @@ import styles from './Pagination.module.css';
 
 const Pagination = () => {
   const [activePage, setActivePage] = useState(1);
+
   const count = useSelector((state) => state.home.count);
   const limit = useSelector((state) => state.home.limit);
   const categoryId = useSelector((state) => state.home.categoryId);
   const subcategoryId = useSelector((state) => state.home.subcategoryId);
+  const orderBy = useSelector((state) => state.home.sortBy);
+
   const pagesCount = Math.ceil(count / limit);
 
   const pages = [];
@@ -38,9 +41,15 @@ const Pagination = () => {
 
   useEffect(() => {
     dispatch(
-      fetchGetAllProdact({ categoryId, subcategoryId, page: activePage, limit })
+      fetchGetAllProdact({
+        categoryId,
+        subcategoryId,
+        page: activePage,
+        limit,
+        orderBy,
+      })
     );
-  }, [dispatch, activePage, categoryId, subcategoryId, limit]);
+  }, [dispatch, activePage, categoryId, subcategoryId, limit, orderBy]);
 
   const prevHandler = () => {
     activePage !== 1

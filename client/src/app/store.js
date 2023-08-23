@@ -1,12 +1,13 @@
 import { configureStore } from '@reduxjs/toolkit';
-import { adminReducer, authReducer, homeReducer } from '../pages';
+import { adminReducer, authReducer, homeReducer,prodactReducer } from '../pages';
 
 
 export const store = configureStore({
   reducer: {
     auth: authReducer,
     admin: adminReducer,
-    home: homeReducer
+    home: homeReducer,
+    prodact: prodactReducer
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

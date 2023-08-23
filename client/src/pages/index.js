@@ -6,3 +6,4 @@ export { default as Prodact } from './Prodact/Prodact';
 export { default as authReducer } from './Auth/AuthSlice.js';
 export { default as adminReducer } from './Admin/AdminSlice.js';
 export { default as homeReducer } from './Home/HomeSlice.js';
+export { default as prodactReducer } from './Prodact/ProdactSlice.js';

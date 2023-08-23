@@ -1,12 +1,9 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { BsTriangleFill } from 'react-icons/bs';
 import { v4 as uuidv4 } from 'uuid';
 
 import styles from './Categories.module.css';
-import SortBy from '../SortBy/SortBy';
-import { useNavigate } from 'react-router-dom';
-import { ProdactCard } from '..';
 import {
   selectedCategory,
   selectedSubcategory,
@@ -19,13 +16,23 @@ const Categories = () => {
   const [subcategory, setSubcategory] = useState('');
 
   const categories = useSelector((state) => state.home.category);
-  const categoryId = useSelector((state) => state.home.categoryId);
   const subcategories = useSelector((state) => state.home.subcategory);
-  const prodacts = useSelector((state) => state.home.prodacts);
+  const categoryId = useSelector((state) => state.home.categoryId);
 
   const dispatch = useDispatch();
+  
+  useEffect(() => {
+    if (categoryId) {
+      const currentCategory = categories.filter(
+        (item) => item.id === categoryId
+      );
+      const name = currentCategory[0].name;
+      setActiveItem(name);
+      setSelectedSort(name);
+    }
+  }, [categories, categoryId,dispatch]);
 
-  const navigate = useNavigate();
+  
 
   const clickAllCategoryHandler = () => {
     setActiveItem(null);
@@ -82,39 +89,23 @@ const Categories = () => {
     </div>
   ));
 
-  const redirectHandler = (id) => {
-    navigate('/prodact/' + id);
-  };
-
-  const renderCard = prodacts.map((item) => {
-    return (
-      <ProdactCard
-        key={`${item.name}+${item.id}`}
-        {...item}
-        onclick={() => redirectHandler(item.id)}
-      />
-    );
-  });
-
   return (
     <>
-      <ul className={styles.sortByButtons}>
-        <li
-          className={activeItem === null ? styles.active : null}
-          onClick={clickAllCategoryHandler}
-        >
-          Всі
-        </li>
-        {renderCategory}
-      </ul>
-      <div className={styles.containerContent}>
-        <h2>
-          {activeItem === null ? 'Вся випічка' : selectedSort}
-          {!!subcategory ? ` (${subcategory.name})` : null}
-        </h2>
-      </div>
-        <SortBy />
-      <div className={styles.content}>{renderCard}</div>
+        <ul className={styles.sortByButtons}>
+          <li
+            className={activeItem === null ? styles.active : null}
+            onClick={clickAllCategoryHandler}
+          >
+            Всі
+          </li>
+          {renderCategory}
+        </ul>
+        <div className={styles.containerContent}>
+          <h2>
+            {activeItem === null ? 'Вся випічка' : selectedSort}
+            {!!subcategory ? ` (${subcategory.name})` : null}
+          </h2>
+        </div>
     </>
   );
 };

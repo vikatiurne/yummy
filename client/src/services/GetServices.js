@@ -7,9 +7,9 @@ export default class GetServices {
   static async getSubcategories() {
     return $api.get('/api/subcategory');
   }
-  static async getAllProdacts(categoryId, subcategoryId, page, limit) {
+  static async getAllProdacts(categoryId, subcategoryId, page, limit, orderBy) {
     return $api.get('/api/prodact', {
-      params: { categoryId, subcategoryId, page, limit },
+      params: { categoryId, subcategoryId, page, limit,orderBy },
     });
   }
   static async getOneProdact(id) {
