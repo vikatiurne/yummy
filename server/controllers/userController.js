@@ -10,7 +10,7 @@ class UserController {
   async registration(req, res, next) {
     try {
       const errors = validationResult(req);
-      console.log(errors)
+      console.log(errors);
       if (!errors.isEmpty()) {
         next(ApiError.badRequest('Помилка валідації', errors.array()));
       } else {
@@ -105,14 +105,18 @@ class UserController {
   async forgotPassword(req, res, next) {
     try {
       const { email } = req.body;
-      const userData = userService.forgotPassword(email);
-      res.cookie('refreshToken', userData.refreshToken, {
-        maxAge: 30 * 24 * 60 * 60 * 1000,
-        httpOnly: true,
-      });
-      return res.json({
-        message: `На пошту ${email} був відправлений лист з посиланням на скидання пароля`,
-      });
+      const userData = await userService.forgotPassword(email);
+      return res.json(userData);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async resetPassword(req, res, next) {
+    try {
+      const { newPass, resetLink } = req.body;
+      const userData =await userService.resetPassword(newPass, resetLink);
+      return res.json(userData);
     } catch (error) {
       next(error);
     }

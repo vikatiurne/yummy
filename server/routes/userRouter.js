@@ -18,5 +18,6 @@ router.get('/refresh', userController.refresh);
 router.get('/auth', authMiddleware, userController.check);
 router.get('/user', userController.getUser);
 router.put('/forgot-password', userController.forgotPassword);
+router.put('/reset-password', userController.resetPassword);
 
 export { router as userRouter };

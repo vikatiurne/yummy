@@ -6,14 +6,14 @@ const initialState = {
   isAuth: false,
   status: 'idle',
   error: null,
+  msg:null
 };
 
 export const fetchLogin = createAsyncThunk(
   'auth/fetchLogin',
   async ({ email, password }, { rejectWithValue }) => {
     try {
-      const response = await AuthServices.login(email, password);
-      return response;
+      return await AuthServices.login(email, password);
     } catch (error) {
       return rejectWithValue(error.response.data);
     }
@@ -21,17 +21,13 @@ export const fetchLogin = createAsyncThunk(
 );
 export const fetchAutoLogin = createAsyncThunk(
   'auth/fetchAutoLogin',
-  async (token) => {
-    const response = await AuthServices.autoLogin(token);
-    return response;
-  }
+  async (token) => await AuthServices.autoLogin(token)
 );
 export const fetchRegistration = createAsyncThunk(
   'auth/fetchRegistration',
   async ({ email, password, name }, { rejectWithValue }) => {
     try {
-      const response = await AuthServices.registration(email, password, name);
-      return response;
+      return await AuthServices.registration(email, password, name);
     } catch (error) {
       return rejectWithValue(error.response.data);
     }
@@ -42,13 +38,24 @@ export const fetchForgotPassword = createAsyncThunk(
   'auth/fetchForgotPassword',
   async ({ email }, { rejectWithValue }) => {
     try {
-      const response = await AuthServices.forgotPassword(email);
-      return response;
+      return await AuthServices.forgotPassword(email);
     } catch (error) {
       return rejectWithValue(error.response.data);
     }
   }
 );
+
+export const fetchResetPassword = createAsyncThunk(
+  'auth/fetchResetPassword',
+  async ({ newPass, resetLink }, { rejectWithValue }) => {
+    try {
+      return await AuthServices.resetPassword(newPass, resetLink);
+    } catch (error) {
+      return rejectWithValue(error.response.data);
+    }
+  }
+);
+
 export const fetchLogout = createAsyncThunk('auth/fetchLogout', async () => {
   return await AuthServices.logout();
 });
@@ -138,12 +145,25 @@ const authSlice = createSlice({
       })
       .addCase(fetchForgotPassword.pending, (state) => {
         state.status = 'loading';
+        state.error = null;
       })
       .addCase(fetchForgotPassword.fulfilled, (state, { payload }) => {
-        console.log(payload)
+        state.error = payload.data.message;
       })
-      .addCase(fetchForgotPassword.rejected, (state) => {
+      .addCase(fetchForgotPassword.rejected, (state, { payload }) => {
         state.status = 'error';
+        state.msg = payload.message;
+      })
+      .addCase(fetchResetPassword.pending, (state) => {
+        state.status = 'loading';
+        state.error = null;
+      })
+      .addCase(fetchResetPassword.fulfilled, (state, { payload }) => {
+        state.msg = payload.data.message;
+      })
+      .addCase(fetchResetPassword.rejected, (state, { payload }) => {
+        state.status = 'error';
+        state.error = payload.message;
       });
   },
 });

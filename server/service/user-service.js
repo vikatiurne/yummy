@@ -1,6 +1,6 @@
 import bcrypt from 'bcrypt';
 import { v4 as uuidv4 } from 'uuid';
-import jwt from 'jsonwebtoken';
+import _ from 'lodash';
 
 import { ApiError } from '../error/apiError.js';
 import { User } from '../models/models.js';
@@ -39,7 +39,7 @@ class UserService {
 
     return { ...tokens, user: userDto };
   }
-  
+
   async activate(activationLink) {
     const user = await User.findOne({ activationLink });
     if (!user) {
@@ -106,19 +106,35 @@ class UserService {
     if (!user) {
       throw ApiError.badRequest(`Користувач ${email} не знайден`);
     }
-
-    const token = jwt.sign(
-      { id: user.id },
-      process.env.JWT_RESET_PASSWORD_SECRET,
-      { expiresIn: '20m' }
-    );
-    const resetLink = uuidv4();
+    const token = tokenService.generateResetToken({ id: user.id });
     await mailService.sendResetPasswordMail(
       email,
-      `${process.env.CLIENT_URL}/api/user/resetpassword/${resetLink}`
+      `${process.env.CLIENT_URL}/resetpassword/${token}`
     );
-    
-    return await User.update({ resetLink: token }, { where: { email } });
+
+    await User.update({ resetLink: token }, { where: { email } });
+    return {
+      message: `На пошту ${email} був відправлений лист з посиланням на скидання пароля`,
+    };
+  }
+
+  async resetPassword(newPass, resetLink) {
+    if (!resetLink) {
+      throw ApiError.unauthorizedError();
+    }
+    const userData = tokenService.validateResetToken(resetLink);
+    let user = await User.findOne({ where: { resetLink } });
+    if (!user || !userData) {
+      throw ApiError.badRequest(`Користувач з цим токен не знайден`);
+    }
+    const hashPassword = await bcrypt.hash(newPass, 3);
+    const obj = {
+      password: hashPassword,
+      resetLink: '',
+    };
+    user = _.extend(user, obj);
+    await user.save();
+    return { message: 'Пароль змінено' };
   }
 }
 

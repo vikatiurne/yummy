@@ -5,7 +5,7 @@ import { Admin, Auth, Basket, Home, Prodact } from './pages';
 import { useDispatch } from 'react-redux';
 import { fetchAutoLogin } from './pages/Auth/AuthSlice';
 import { useEffect } from 'react';
-import { ForgotPassword, Login, Registration } from './components';
+import { ForgotPassword } from './components';
 
 function App() {
   const dispatch = useDispatch();
@@ -23,6 +23,7 @@ function App() {
           <Route path="basket" element={<Basket />} />
           <Route path="prodact/:id" element={<Prodact />} />
           <Route path="auth" element={<Auth />} />
+          <Route path="resetpassword/:link" element={<ForgotPassword />} />
           <Route path="admin" element={<Admin />} />
         </Route>
       </Routes>

@@ -3,7 +3,11 @@ import { useDispatch, useSelector } from 'react-redux';
 import { RxEyeClosed, RxEyeOpen } from 'react-icons/rx';
 import { Navigate } from 'react-router-dom';
 
-import { fetchForgotPassword, fetchLogin, fetchRegistration } from '../../pages/Auth/AuthSlice';
+import {
+  fetchForgotPassword,
+  fetchLogin,
+  fetchRegistration,
+} from '../../pages/Auth/AuthSlice';
 import Button from '../UI/Button/Button';
 import AuthModal from '../Modals/AuthModal';
 import styles from './LoginForm.module.css';
@@ -17,6 +21,8 @@ const LoginForm = () => {
   const [eye, setEye] = useState(true);
   const [inputType, setInputType] = useState('password');
   const [forgotPass, setForgotPass] = useState(false);
+  const [resetPass, setResetPass] = useState(false);
+  const [login, setLogin] = useState(true);
 
   const dispatch = useDispatch();
 
@@ -36,20 +42,30 @@ const LoginForm = () => {
   const registrationHandler = () =>
     dispatch(fetchRegistration({ email, password, name }));
 
-    const forgotPassHandler = ()=>{dispatch(fetchForgotPassword({email}))}
+  const forgotPassHandler = () => {
+    dispatch(fetchForgotPassword({ email }));
+    setLogin(false);
+    setForgotPass(true);
+  };
 
   const registerLinkHandler = () => {
     setRegistr(true);
     setForgotPass(false);
+    setLogin(false);
   };
   const loginLinkHandler = () => {
     setRegistr(false);
     setForgotPass(false);
+    setLogin(true);
+  };
+
+  const forgotHandler = () => {
+    setForgotPass(true);
+    setResetPass(false);
+    setLogin(false);
   };
 
   const clickModalHandler = () => setModalActive(false);
-
-  const forgotHandler = () => setForgotPass(true);
 
   const openEyeHandler = () => {
     setEye((prev) => !prev);
@@ -61,76 +77,85 @@ const LoginForm = () => {
   };
 
   const renderForm = (
-    <form className={styles.formWrapper} onSubmit={(e) => e.preventDefault()}>
-      <div className={styles.formFields}>
-        {registr ? (
-          <input
-            type="text"
-            placeholder="Ім'я"
-            onChange={nameHandler}
-            value={name}
-            autoComplete="on"
-          />
-        ) : null}
-        <input
-          type="text"
-          placeholder="E-mail"
-          onChange={emailHandler}
-          value={email}
-          autoComplete="on"
-        />
-        {!forgotPass && (
-          <div className={styles.password}>
+    <>
+      <form className={styles.formWrapper} onSubmit={(e) => e.preventDefault()}>
+        {login && <h2>Вхід</h2>}
+        {registr && <h2>Реєстрація</h2>}
+        {forgotPass && <h2>Відновлення паролю</h2>}
+        <div className={styles.formFields}>
+          {registr ? (
             <input
-              type={inputType}
-              placeholder="Пароль"
-              onChange={passwordHandler}
-              value={password}
+              type="text"
+              placeholder="Ім'я"
+              onChange={nameHandler}
+              value={name}
               autoComplete="on"
             />
-            {eye ? (
-              <RxEyeClosed
-                onClick={openEyeHandler}
-                className={styles.visible}
+          ) : null}
+          <input
+            type="text"
+            placeholder="E-mail"
+            onChange={emailHandler}
+            value={email}
+            autoComplete="on"
+          />
+          {(login || resetPass || registr) && (
+            <div className={styles.password}>
+              <input
+                type={inputType}
+                placeholder="Пароль"
+                onChange={passwordHandler}
+                value={password}
+                autoComplete="on"
               />
-            ) : (
-              <RxEyeOpen onClick={closeEyeHandler} className={styles.visible} />
-            )}
-          </div>
-        )}
-        {!registr && !forgotPass && (
-          <p>
-            Забули пароль?{' '}
-            <span className={styles.link} onClick={forgotHandler}>
-              Відновити
-            </span>
-          </p>
-        )}
-        {registr && (
-          <p>
-            Після реєстрації на вашу поштову скриньку буде відправлено лист з
-            посиланням для активації акаунту
-          </p>
-        )}
-      </div>
-      <div className={styles.formControl}>
-        {!registr && !forgotPass && (
-          <Button className={styles.success} onclick={loginHandler}>
-            Увійти
-          </Button>
-        )}
-        {registr && (
-          <Button className={styles.primary} onclick={registrationHandler}>
-            Зареєструватися
-          </Button>
-        )}
-        {forgotPass && (
-          <Button className={styles.success} onclick={forgotPassHandler}>
-            Відновити пароль
-          </Button>
-        )}
-      </div>
-    </form>
+              {eye ? (
+                <RxEyeClosed
+                  onClick={openEyeHandler}
+                  className={styles.visible}
+                />
+              ) : (
+                <RxEyeOpen
+                  onClick={closeEyeHandler}
+                  className={styles.visible}
+                />
+              )}
+            </div>
+          )}
+          {login && (
+            <p>
+              Забули пароль?{' '}
+              <span className={styles.link} onClick={forgotHandler}>
+                Відновити
+              </span>
+            </p>
+          )}
+          {registr && (
+            <p>
+              Після реєстрації на вашу поштову скриньку буде відправлено лист з
+              посиланням для активації акаунту
+            </p>
+          )}
+        </div>
+
+        <div className={styles.formControl}>
+          {login && (
+            <Button className={styles.success} onclick={loginHandler}>
+              Увійти
+            </Button>
+          )}
+          {registr && (
+            <Button className={styles.primary} onclick={registrationHandler}>
+              Зареєструватися
+            </Button>
+          )}
+          {forgotPass && (
+            <Button className={styles.success} onclick={forgotPassHandler}>
+              Відновити пароль
+            </Button>
+          )}
+        </div>
+      </form>
+    </>
   );
 
   const render = (

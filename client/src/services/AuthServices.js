@@ -20,4 +20,7 @@ export default class AuthServices {
   static async forgotPassword(email) {
     return $api.put('/api/user/forgot-password', { email });
   }
+  static async resetPassword(newPass, resetLink) {
+    return $api.put('/api/user/reset-password', { newPass, resetLink });
+  }
 }

@@ -11,6 +11,13 @@ class TokenService {
     });
     return { accessToken, refreshToken };
   }
+  generateResetToken(payload) {
+    const token = jwt.sign(payload, process.env.JWT_RESET_PASSWORD_SECRET, {
+      expiresIn: '20m',
+    });
+    
+    return token;
+  }
   validateAccessToken(token) {
     try {
       const userData = jwt.verify(token, process.env.JWT_ACCESS_SECRET);
@@ -22,6 +29,14 @@ class TokenService {
   validateRefreshToken(token) {
     try {
       const userData = jwt.verify(token, process.env.JWT_REFRESH_SECRET);
+      return userData;
+    } catch (error) {
+      return null;
+    }
+  }
+  validateResetToken(token) {
+    try {
+      const userData = jwt.verify(token, process.env.JWT_RESET_PASSWORD_SECRET);
       return userData;
     } catch (error) {
       return null;
