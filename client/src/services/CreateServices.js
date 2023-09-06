@@ -18,6 +18,15 @@ export default class CreateServices {
     }
   }
   static async createProdact(prodact) {
-    return  $api.post('/api/prodact', prodact );
+    return $api.post('/api/prodact', prodact);
+  }
+  static async createRating(rating, prodactId) {
+    try {
+      const user = await GetServices.getUser();
+      const userId = user.data.id;
+      return await $api.post('/api/rating', { rating, prodactId, userId });
+    } catch (error) {
+      return null;
+    }
   }
 }

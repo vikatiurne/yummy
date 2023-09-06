@@ -30,7 +30,6 @@ app.use(cookieParser());
 app.use(express.static('static'));
 app.use(fileUpload({}));
 app.use('/api', router);
-
 app.use(errorHandler);
 
 const start = async () => {

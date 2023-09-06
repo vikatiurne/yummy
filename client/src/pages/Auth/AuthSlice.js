@@ -1,7 +1,12 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import AuthServices from '../../services/AuthServices';
 
-const initialState = { user: {}, isAuth: false, status: 'idle', error: null };
+const initialState = {
+  user: {},
+  isAuth: false,
+  status: 'idle',
+  error: null,
+};
 
 export const fetchLogin = createAsyncThunk(
   'auth/fetchLogin',
@@ -32,6 +37,18 @@ export const fetchRegistration = createAsyncThunk(
     }
   }
 );
+
+export const fetchForgotPassword = createAsyncThunk(
+  'auth/fetchForgotPassword',
+  async ({ email }, { rejectWithValue }) => {
+    try {
+      const response = await AuthServices.forgotPassword(email);
+      return response;
+    } catch (error) {
+      return rejectWithValue(error.response.data);
+    }
+  }
+);
 export const fetchLogout = createAsyncThunk('auth/fetchLogout', async () => {
   return await AuthServices.logout();
 });
@@ -43,29 +60,50 @@ const authSlice = createSlice({
     builder
       .addCase(fetchLogin.pending, (state) => {
         state.status = 'loading';
+        state.error = null;
       })
       .addCase(fetchLogin.fulfilled, (state, { payload }) => {
         state.status = 'success';
-        state.error = null
-        state.isAuth = true;
-        state.user = payload.data.user;
-        console.log(payload.data.accessToken)
-        localStorage.setItem('token', payload.data.accessToken);
+        if (!!payload.data.user) {
+          state.isAuth = true;
+          state.user = payload.data.user;
+          localStorage.setItem('token', payload.data.accessToken);
+        } else {
+          state.error = payload.data.message;
+        }
       })
       .addCase(fetchLogin.rejected, (state, { payload }) => {
         state.status = 'error';
-        console.log(payload)
         state.error = payload.message;
       })
       .addCase(fetchRegistration.pending, (state) => {
         state.status = 'loading';
+        state.error = null;
       })
       .addCase(fetchRegistration.fulfilled, (state, { payload }) => {
         state.status = 'success';
-        state.error = null
-        state.isAuth = true;
-        state.user = payload.data.user;
-        localStorage.setItem('token', payload.data.accessToken);
+        if (!!payload.data.user) {
+          state.isAuth = true;
+          state.user = payload.data.user;
+          localStorage.setItem('token', payload.data.accessToken);
+        } else {
+          if (!!payload.data.errors.length) {
+            let problems = [];
+
+            for (let i = 0; i < payload.data.errors.length; i++) {
+              let nameProblem = payload.data.errors[i].path;
+              if (nameProblem === 'password') nameProblem = 'паролю';
+              problems.push(nameProblem);
+            }
+            let msg;
+            problems.length > 1
+              ? (msg = `${problems[0]} та ${problems[1]}`)
+              : (msg = `${problems[0]}`);
+            state.error = `${payload.data.message}. Перевірте коректність вашого ${msg}.`;
+          } else {
+            state.error = payload.data.message;
+          }
+        }
       })
       .addCase(fetchRegistration.rejected, (state, { payload }) => {
         state.status = 'error';
@@ -79,7 +117,7 @@ const authSlice = createSlice({
       })
       .addCase(fetchLogout.fulfilled, (state) => {
         state.status = 'success';
-        state.error = null
+        state.error = null;
         state.isAuth = false;
         state.user = {};
         localStorage.removeItem('token');
@@ -92,10 +130,19 @@ const authSlice = createSlice({
       })
       .addCase(fetchAutoLogin.fulfilled, (state, { payload }) => {
         state.user = payload.data;
-        state.error = null
+        state.error = null;
         state.isAuth = true;
       })
       .addCase(fetchAutoLogin.rejected, (state) => {
+        state.status = 'error';
+      })
+      .addCase(fetchForgotPassword.pending, (state) => {
+        state.status = 'loading';
+      })
+      .addCase(fetchForgotPassword.fulfilled, (state, { payload }) => {
+        console.log(payload)
+      })
+      .addCase(fetchForgotPassword.rejected, (state) => {
         state.status = 'error';
       });
   },

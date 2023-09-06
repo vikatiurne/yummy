@@ -1,9 +1,12 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
+import {FaStar} from 'react-icons/fa'
 
 import Spiner from '../../components/UI/Spinner/Spiner';
 import { fetchGetProdact } from './ProdactSlice';
+
+import styles from './Prodact.module.css'
 
 const Prodact = () => {
   const prodact = useSelector((state) => state.prodact.prodact);
@@ -23,8 +26,13 @@ const Prodact = () => {
       <img
         src={process.env.REACT_APP_API_URL + prodact.img}
         alt={prodact.name}
+        
       />
       <div>
+      <div className={styles.rating} >
+          <p>{prodact.rating}</p>
+          <FaStar className={styles.activeStar} />
+        </div>
         <h4>Опис продукту</h4>
         <p>{prodact.info[0].discription}</p>
         <p>Мінімальне замовлення {prodact.sizes[0]}</p>

@@ -7,11 +7,12 @@ const initialState = {
   subcategory: [],
   subcategoryId: null,
   prodacts: [],
-  prodact: [],
   count: null,
   limit: 8,
   page: 1,
   sortBy: '',
+  userId: null,
+  ratings: [],
 };
 
 export const fetchGetCategory = createAsyncThunk(
@@ -32,6 +33,15 @@ export const fetchGetAllProdact = createAsyncThunk(
       limit,
       orderBy
     )
+);
+
+export const fetchGetRatings = createAsyncThunk(
+  'home/fetchGetRatings',
+  async () => {
+    const curentUser = await GetServices.getUser();
+    const id = curentUser.data.id
+    return await GetServices.getRating(id);
+  }
 );
 
 const HomeSlice = createSlice({
@@ -70,6 +80,11 @@ const HomeSlice = createSlice({
       .addCase(fetchGetAllProdact.fulfilled, (state, { payload }) => {
         state.prodacts = payload.data.rows;
         state.count = payload.data.count;
+      })
+      .addCase(fetchGetRatings.fulfilled, (state, { payload }) => {
+        for (let i = 0; i < payload.data.length; i++) {
+          state.ratings.push(payload.data[i].prodactId);
+        }
       });
   },
 });

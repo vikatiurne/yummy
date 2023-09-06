@@ -17,5 +17,6 @@ router.get('/activate/:link', userController.activate);
 router.get('/refresh', userController.refresh);
 router.get('/auth', authMiddleware, userController.check);
 router.get('/user', userController.getUser);
+router.put('/forgot-password', userController.forgotPassword);
 
 export { router as userRouter };

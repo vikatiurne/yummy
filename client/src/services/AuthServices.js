@@ -10,11 +10,14 @@ export default class AuthServices {
   static async logout() {
     return $api.post('/api/user/logout');
   }
-  // static async autoLogin(token) {
-  //   return $api.get('/api/user/refresh');
-  // }
   static async autoLogin(token) {
     const header = `Bearer ${token}`;
-    return await $api.get('/api/user/user', { headers: { Authorization: header } });
+    return await $api.get('/api/user/user', {
+      headers: { Authorization: header },
+    });
+  }
+
+  static async forgotPassword(email) {
+    return $api.put('/api/user/forgot-password', { email });
   }
 }

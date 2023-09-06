@@ -1,16 +1,16 @@
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { Categories, Pagination, SortBy } from '../../components';
+import { Categories, Pagination, SortBy, Prodacts } from '../../components';
 
 import {
   fetchGetAllProdact,
   fetchGetCategory,
+  fetchGetRatings,
   fetchGetSubcategory,
 } from './HomeSlice';
 
 import styles from './Home.module.css';
-import ProdactItem from '../../components/ProdactItem/ProdactItem';
 
 function Home() {
   const categoryId = useSelector((state) => state.home.categoryId);
@@ -18,13 +18,13 @@ function Home() {
   const limit = useSelector((state) => state.home.limit);
   const page = useSelector((state) => state.home.page);
   const orderBy = useSelector((state) => state.home.sortBy);
-  console.log(orderBy)
-
+  
   const dispatch = useDispatch();
 
   useEffect(() => {
     dispatch(fetchGetCategory());
     dispatch(fetchGetSubcategory());
+    dispatch(fetchGetRatings())
     dispatch(
       fetchGetAllProdact({ categoryId, subcategoryId, page, limit, orderBy })
     );
@@ -36,7 +36,7 @@ function Home() {
         <Categories />
       </div>
       <SortBy />
-      <ProdactItem />
+      <Prodacts />
       <Pagination />
     </>
   );

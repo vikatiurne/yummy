@@ -46,7 +46,6 @@ class ProdactController {
     page = page || 1;
     limit = limit || 8;
     let offset = (page - 1) * limit;
-    // let offset = page * limit - limit;
     let prodacts;
     const queries = {
       offset,
@@ -73,38 +72,6 @@ class ProdactController {
 
     return await res.json(prodacts);
   }
-
-  // async getAll(req, res) {
-  //   let { categoryId, subcategoryId, limit, page } = req.query;
-  //   page = page || 1;
-  //   limit = limit || 8;
-  //   let offset = page * limit - limit;
-  //   let prodacts;
-  //   if (!categoryId && !subcategoryId) {
-  //     prodacts = await Prodact.findAndCountAll({ limit, offset });
-  //   }
-  //   if (categoryId && !subcategoryId) {
-  //     prodacts = await Prodact.findAndCountAll({
-  //       where: { categoryId },
-  //       limit,
-  //       offset,
-  //     });
-  //   }
-  //   if (!categoryId && subcategoryId) {
-  //     prodacts = await Prodact.findAndCountAll({
-  //       offset,
-  //     });
-  //   }
-  //   if (categoryId && subcategoryId) {
-  //     prodacts = await Prodact.findAndCountAll({
-  //       where: { categoryId, subcategoryId },
-  //       limit,
-  //       offset,
-  //     });
-  //   }
-
-  //   return await res.json(prodacts);
-  // }
   async getOne(req, res) {
     const { id } = req.params;
     const prodact = await Prodact.findOne({

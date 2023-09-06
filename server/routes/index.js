@@ -4,6 +4,7 @@ import { userRouter } from './userRouter.js';
 import { categoryRouter } from './categoryRouter.js';
 import { subcategoryRouter } from './subcategoryRouter.js';
 import { prodactRouter } from './prodactRouter.js';
+import { ratingRouter } from './ratingRouter.js';
 
 const router = new Router();
 
@@ -11,6 +12,6 @@ router.use('/user', userRouter);
 router.use('/prodact', prodactRouter);
 router.use('/category', categoryRouter);
 router.use('/subcategory', subcategoryRouter);
+router.use('/rating', ratingRouter);
 
-export default router
-
+export default router;

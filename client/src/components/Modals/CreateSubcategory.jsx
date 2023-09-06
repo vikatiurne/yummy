@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { v4 as uuidv4 } from 'uuid';
 
-import { Modal, Button, Input, Select } from '../index';
+import { Modal, Button,  Select } from '../index';
 
 import { fetchCreateSubcategory } from '../../pages/Admin/AdminSlice';
 import { fetchGetSubcategory } from '../../pages/Home/HomeSlice';
@@ -77,7 +77,7 @@ const CreateSubcategory = ({ active, setActive }) => {
               </option>
             ))}
           </Select>
-          <Input
+          <input
             type="text"
             placeholder="Назва підкатегорії"
             value={subcategory}

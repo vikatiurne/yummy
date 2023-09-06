@@ -1,6 +1,11 @@
 import $api from '../http/axios';
 
 export default class GetServices {
+  static async getUser() {
+    const token = localStorage.getItem('token')
+    const header = `Bearer ${token}`;
+    return await $api.get('/api/user/user', { headers: { Authorization: header } })
+  }
   static async getCategories() {
     return $api.get('/api/category');
   }
@@ -14,5 +19,8 @@ export default class GetServices {
   }
   static async getOneProdact(id) {
     return $api.get('/api/prodact/' + id);
+  }
+  static async getRating(userId) {
+    return $api.get('/api/rating', {params: {userId}} );
   }
 }

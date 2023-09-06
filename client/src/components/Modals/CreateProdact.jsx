@@ -5,7 +5,7 @@ import { FaFileDownload } from 'react-icons/fa';
 
 import GetServices from '../../services/GetServices';
 
-import { Modal, Button, Select, Input } from '../index';
+import { Modal, Button, Select } from '../index';
 
 import styles from './Modals.module.css';
 import { fetchCreateProdact } from '../../pages/Admin/AdminSlice';
@@ -114,7 +114,7 @@ const CreateProdact = ({ active, setActive }) => {
             </Select>
           </div>
           <div className={styles.priceName}>
-            <Input
+            <input
               type="text"
               placeholder="Назва продукта"
               value={prodactName}

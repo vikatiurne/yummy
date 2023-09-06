@@ -1,13 +1,15 @@
 import { useState } from 'react';
-import { FaPlus, FaLongArrowAltRight, FaStar } from 'react-icons/fa';
+import { FaPlus, FaLongArrowAltRight } from 'react-icons/fa';
 
 import styles from './ProdactCard.module.css';
 
-const CakeCard = ({ img, name, sizes, price, rating, onclick }) => {
+import { useNavigate } from 'react-router-dom';
+import Rating from '../Rating/Rating';
+
+const ProdactCard = ({ img, name, sizes, price, rating, id }) => {
   const [activeSize, setActiveSize] = useState(sizes[0]);
 
-  const [ratingTest, setRatingTest] = useState(0);
-  const [toggleRating, setToggleRating] = useState(false);
+  const navigate = useNavigate();
 
   const renderSizes = sizes.map((size, i) => (
     <li
@@ -19,11 +21,8 @@ const CakeCard = ({ img, name, sizes, price, rating, onclick }) => {
     </li>
   ));
 
-  const addRatingHandler = () => {
-    !toggleRating
-      ? setRatingTest((prev) => prev + 1)
-      : setRatingTest((prev) => prev - 1);
-    setToggleRating((prev) => !prev);
+  const redirectHandler = () => {
+    navigate('/prodact/' + id);
   };
 
   return (
@@ -40,17 +39,18 @@ const CakeCard = ({ img, name, sizes, price, rating, onclick }) => {
         </button>
       </div>
       <div className={styles.footerCard}>
-        <div className={styles.moreInfo} onClick={onclick}>
+        <div className={styles.moreInfo} onClick={redirectHandler}>
           <p>докладніше...</p>
           <FaLongArrowAltRight />
         </div>
-        <div className={styles.rating} onClick={addRatingHandler}>
-          <p>{ratingTest}</p>
+        <Rating rating={rating} prodactId={id}/>
+        {/* <div className={styles.rating} onClick={toggleRatingHandler}>
+          <p>{rate}</p>
           <FaStar className={toggleRating ? styles.activeStar : styles.star} />
-        </div>
+        </div> */}
       </div>
     </div>
   );
 };
 
-export default CakeCard;
+export default ProdactCard;

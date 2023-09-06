@@ -1,5 +1,4 @@
 import { validationResult } from 'express-validator';
-import jwt from 'jsonwebtoken';
 
 import { ApiError } from '../error/apiError.js';
 import { User, Basket } from '../models/models.js';
@@ -11,6 +10,7 @@ class UserController {
   async registration(req, res, next) {
     try {
       const errors = validationResult(req);
+      console.log(errors)
       if (!errors.isEmpty()) {
         next(ApiError.badRequest('Помилка валідації', errors.array()));
       } else {
@@ -96,8 +96,23 @@ class UserController {
       const autorizationHeader = req.headers.authorization;
       const token = autorizationHeader.split(' ')[1];
       const user = await userService.getUser(token);
-
       return res.json(user);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async forgotPassword(req, res, next) {
+    try {
+      const { email } = req.body;
+      const userData = userService.forgotPassword(email);
+      res.cookie('refreshToken', userData.refreshToken, {
+        maxAge: 30 * 24 * 60 * 60 * 1000,
+        httpOnly: true,
+      });
+      return res.json({
+        message: `На пошту ${email} був відправлений лист з посиланням на скидання пароля`,
+      });
     } catch (error) {
       next(error);
     }

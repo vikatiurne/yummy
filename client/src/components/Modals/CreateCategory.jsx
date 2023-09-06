@@ -3,7 +3,7 @@ import { useState } from 'react';
 
 import { fetchCreateCategory } from '../../pages/Admin/AdminSlice';
 
-import {Modal, Button, Input} from '../index';
+import {Modal, Button} from '../index';
 
 import styles from './Modals.module.css';
 
@@ -27,7 +27,7 @@ const CreateCategory = ({ active, setActive }) => {
       </div>
       <div className={styles.modalContent}>
         <form onSubmit={(e) => e.preventDefault()}>
-          <Input
+          <input
             type="text"
             placeholder="Назва категорії"
             value={category}

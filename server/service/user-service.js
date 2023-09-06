@@ -1,5 +1,6 @@
 import bcrypt from 'bcrypt';
 import { v4 as uuidv4 } from 'uuid';
+import jwt from 'jsonwebtoken';
 
 import { ApiError } from '../error/apiError.js';
 import { User } from '../models/models.js';
@@ -38,6 +39,7 @@ class UserService {
 
     return { ...tokens, user: userDto };
   }
+  
   async activate(activationLink) {
     const user = await User.findOne({ activationLink });
     if (!user) {
@@ -46,6 +48,7 @@ class UserService {
     user.isActivated = true;
     await user.save();
   }
+
   async login(email, password) {
     const user = await User.findOne({ where: { email } });
     if (!user) {
@@ -96,6 +99,26 @@ class UserService {
     const user = await User.findByPk(tokenData.userId);
     const userDto = new UserDto(user);
     return userDto;
+  }
+
+  async forgotPassword(email) {
+    const user = await User.findOne({ where: { email } });
+    if (!user) {
+      throw ApiError.badRequest(`Користувач ${email} не знайден`);
+    }
+
+    const token = jwt.sign(
+      { id: user.id },
+      process.env.JWT_RESET_PASSWORD_SECRET,
+      { expiresIn: '20m' }
+    );
+    const resetLink = uuidv4();
+    await mailService.sendResetPasswordMail(
+      email,
+      `${process.env.CLIENT_URL}/api/user/resetpassword/${resetLink}`
+    );
+    
+    return await User.update({ resetLink: token }, { where: { email } });
   }
 }
 

@@ -6,7 +6,6 @@ import {
 } from 'react-icons/md';
 import { v4 as uuidv4 } from 'uuid';
 
-import Input from '../UI/Input/Input';
 import { fetchGetAllProdact, selectedLimit } from '../../pages/Home/HomeSlice';
 
 import styles from './Pagination.module.css';
@@ -68,7 +67,7 @@ const Pagination = () => {
         <p>Всьго товарів {count}</p>
         <div className={styles.limit}>
           <p>Показати по</p>
-          <Input
+          <input
             type="number"
             value={limitProdact}
             onChange={(e) => setLimitProdact(Number(e.target.value))}

@@ -26,7 +26,6 @@ const SortBy = () => {
     if (item === 'популярністю') sortBy = 'rating';
     if (item === 'ціною') sortBy = 'price';
     if (item === 'алфавітом') sortBy = 'name';
-    console.log(sortBy)
     dispatch(selectedSortBy(sortBy));
   };
 

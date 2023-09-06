@@ -1,4 +1,5 @@
 import { Basket, Admin } from '../../server/models/models';
+import { Login, Registration } from './components';
 import { Auth, Home, Prodact } from './pages';
 import {
   ADMIN_ROUTE,
@@ -27,11 +28,11 @@ export const publicRoutes = [
   },
   {
     path: LOGIN_ROUTE,
-    Component: Auth,
+    Component: Login,
   },
   {
     path: REGISTRATION_ROUTE,
-    Component: Auth,
+    Component: Registration,
   },
   {
     path: PRODACT_ROUTE + '/id',

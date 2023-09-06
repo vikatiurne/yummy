@@ -70,3 +70,18 @@ input[type="file"] {
   margin-left: 0.3rem;
   font-size: 1.1rem;
 }
+
+.stars{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+.stars p{
+  font-size: 1.7rem;
+  padding: 0.3rem;
+  cursor: pointer;
+}
+.starFill{
+  color: gold
+}

@@ -1,5 +1,5 @@
 import sequelize from '../bd.js';
-import { DataTypes } from 'sequelize';
+import { DataTypes, STRING } from 'sequelize';
 
 const User = sequelize.define('user', {
   id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
@@ -9,6 +9,7 @@ const User = sequelize.define('user', {
   role: { type: DataTypes.STRING, defaultValue: 'USER' },
   isActivated: { type: DataTypes.BOOLEAN, defaultValue: false },
   activationLink: { type: DataTypes.STRING },
+  resetLink: { type: DataTypes.STRING, defaultValue: '' },
 });
 
 const Token = sequelize.define('token', {
@@ -30,7 +31,7 @@ const Prodact = sequelize.define('prodact', {
   id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
   name: { type: DataTypes.STRING, unique: true, allowNull: false },
   price: { type: DataTypes.INTEGER, allowNull: false },
-  rating: { type: DataTypes.INTEGER, defaultValue: 0 },
+  rating: { type: DataTypes.FLOAT, defaultValue: 0 },
   sizes: { type: DataTypes.ARRAY(DataTypes.STRING) },
   img: { type: DataTypes.STRING, allowNull: false },
 });
