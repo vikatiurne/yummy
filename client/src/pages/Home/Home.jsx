@@ -6,7 +6,6 @@ import { Categories, Pagination, SortBy, Prodacts } from '../../components';
 import {
   fetchGetAllProdact,
   fetchGetCategory,
-  fetchGetRatings,
   fetchGetSubcategory,
 } from './HomeSlice';
 
@@ -17,18 +16,23 @@ function Home() {
   const subcategoryId = useSelector((state) => state.home.subcategoryId);
   const limit = useSelector((state) => state.home.limit);
   const page = useSelector((state) => state.home.page);
-  const orderBy = useSelector((state) => state.home.sortBy);
-  
+  const orderBy = useSelector((state) => state.home.orderBy);
+  const sortBy = useSelector((state) => state.home.sortBy);
+  const ratingById = useSelector(state=>state.prodact.rating)
+  const prodactsList = useSelector((state) => state.home.prodacts);
+   
   const dispatch = useDispatch();
 
   useEffect(() => {
     dispatch(fetchGetCategory());
     dispatch(fetchGetSubcategory());
-    dispatch(fetchGetRatings())
+  }, [dispatch]);
+
+  useEffect(() => {
     dispatch(
-      fetchGetAllProdact({ categoryId, subcategoryId, page, limit, orderBy })
+      fetchGetAllProdact({ categoryId, subcategoryId, page, limit, orderBy, sortBy })
     );
-  }, [dispatch, categoryId, subcategoryId, page, limit, orderBy]);
+  }, [dispatch, categoryId, subcategoryId, page, limit, orderBy, sortBy, ratingById]);
 
   return (
     <>
@@ -36,7 +40,7 @@ function Home() {
         <Categories />
       </div>
       <SortBy />
-      <Prodacts />
+      <Prodacts prodacts={prodactsList}/>
       <Pagination />
     </>
   );

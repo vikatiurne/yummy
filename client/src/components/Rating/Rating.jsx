@@ -1,25 +1,39 @@
 import { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { FaStar } from 'react-icons/fa';
 
-import styles from './Rating.module.css';
 import CreateRating from '../Modals/CreateRating';
 
+import { fetchCheckVote } from '../../pages/Prodact/ProdactSlice';
+
+import styles from './Rating.module.css';
+
 const Rating = ({ rating, prodactId }) => {
-  const [rate, setRate] = useState(rating);
+ 
   const [activeModal, setActiveModal] = useState(false);
 
+  const dispatch = useDispatch();
+
+  const user = useSelector((state) => state.auth.user);
+
+  const userId = user.id;
+
   const clickRatingHandler = () => {
+    dispatch(fetchCheckVote({ prodactId, userId }));
     setActiveModal(true);
   };
+  console.log(activeModal)
 
   return (
     <>
-      {activeModal && (
-       <CreateRating  active={activeModal} prodactId={prodactId}
-       setActive={() => setActiveModal(false)}/>
-      )}
+      <CreateRating
+        active={activeModal}
+        prodactId={prodactId}
+        setActive={() => setActiveModal(false)}
+      />
+
       <div className={styles.rating} onClick={clickRatingHandler}>
-        <p>{rate}</p>
+        <p>{rating}</p>
         <FaStar className={styles.activeStar} />
       </div>
     </>

@@ -85,3 +85,6 @@ input[type="file"] {
 .starFill{
   color: gold
 }
+.ratingModal p{
+  margin-bottom: 1.3rem;
+}

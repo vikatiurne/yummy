@@ -10,6 +10,7 @@ const initialState = {
   count: null,
   limit: 8,
   page: 1,
+  orderBy: '',
   sortBy: '',
   userId: null,
   ratings: [],
@@ -19,29 +20,23 @@ export const fetchGetCategory = createAsyncThunk(
   'home/fetchGetCategory',
   async () => await GetServices.getCategories()
 );
+
 export const fetchGetSubcategory = createAsyncThunk(
   'home/fetchGetSubcategory',
   async () => await GetServices.getSubcategories()
 );
+
 export const fetchGetAllProdact = createAsyncThunk(
   'home/fetchGetAllProdact',
-  async ({ categoryId, subcategoryId, page, limit, orderBy }) =>
+  async ({ categoryId, subcategoryId, page, limit, orderBy, sortBy='ASC' }) =>
     await GetServices.getAllProdacts(
       categoryId,
       subcategoryId,
       page,
       limit,
-      orderBy
+      orderBy,
+      sortBy
     )
-);
-
-export const fetchGetRatings = createAsyncThunk(
-  'home/fetchGetRatings',
-  async () => {
-    const curentUser = await GetServices.getUser();
-    const id = curentUser.data.id
-    return await GetServices.getRating(id);
-  }
 );
 
 const HomeSlice = createSlice({
@@ -65,7 +60,8 @@ const HomeSlice = createSlice({
     },
     selectedSortBy: {
       reducer(state, { payload }) {
-        state.sortBy = payload;
+        state.orderBy = payload.orderBy;
+        state.sortBy = payload.sortBy;
       },
     },
   },
@@ -80,11 +76,6 @@ const HomeSlice = createSlice({
       .addCase(fetchGetAllProdact.fulfilled, (state, { payload }) => {
         state.prodacts = payload.data.rows;
         state.count = payload.data.count;
-      })
-      .addCase(fetchGetRatings.fulfilled, (state, { payload }) => {
-        for (let i = 0; i < payload.data.length; i++) {
-          state.ratings.push(payload.data[i].prodactId);
-        }
       });
   },
 });

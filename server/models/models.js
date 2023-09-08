@@ -31,7 +31,11 @@ const Prodact = sequelize.define('prodact', {
   id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
   name: { type: DataTypes.STRING, unique: true, allowNull: false },
   price: { type: DataTypes.INTEGER, allowNull: false },
-  rating: { type: DataTypes.FLOAT, defaultValue: 0 },
+  rating: {
+    type: DataTypes.NUMERIC({ precision: 5, decimals: 1, zerofill: false }),
+    // type: DataTypes.NUMBER({ precision: 5, decimals: 1, zerofill: false }),
+    defaultValue: 0,
+  },
   sizes: { type: DataTypes.ARRAY(DataTypes.STRING) },
   img: { type: DataTypes.STRING, allowNull: false },
 });

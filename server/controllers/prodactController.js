@@ -35,14 +35,7 @@ class ProdactController {
     }
   }
   async getAll(req, res) {
-    let {
-      categoryId,
-      subcategoryId,
-      limit,
-      page,
-      orderBy,
-      sortBy = 'ASC',
-    } = req.query;
+    let { categoryId, subcategoryId, limit, page, orderBy, sortBy } = req.query;
     page = page || 1;
     limit = limit || 8;
     let offset = (page - 1) * limit;

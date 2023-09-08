@@ -22,11 +22,15 @@ const SortBy = () => {
   const handleClickItem = (item) => {
     setActiveItem(item);
     setVisibleSelectList(false);
-    let sortBy = '';
-    if (item === 'популярністю') sortBy = 'rating';
-    if (item === 'ціною') sortBy = 'price';
-    if (item === 'алфавітом') sortBy = 'name';
-    dispatch(selectedSortBy(sortBy));
+    let orderBy = '';
+    let sortBy = 'ASC';
+    if (item === 'популярністю') {
+      orderBy = 'rating';
+      sortBy = 'DESC';
+    }
+    if (item === 'ціною') orderBy = 'price';
+    if (item === 'алфавітом') orderBy = 'name';
+    dispatch(selectedSortBy({ orderBy, sortBy }));
   };
 
   const handleOutsideClick = (e) => {

@@ -17,7 +17,7 @@ const Pagination = () => {
   const limit = useSelector((state) => state.home.limit);
   const categoryId = useSelector((state) => state.home.categoryId);
   const subcategoryId = useSelector((state) => state.home.subcategoryId);
-  const orderBy = useSelector((state) => state.home.sortBy);
+  const orderBy = useSelector((state) => state.home.orderBy);
 
   const pagesCount = Math.ceil(count / limit);
 
