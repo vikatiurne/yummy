@@ -6,7 +6,8 @@ const initialState = {
   isAuth: false,
   status: 'idle',
   error: null,
-  msg:null
+  msg: null,
+  redirectUrl:'',
 };
 
 export const fetchLogin = createAsyncThunk(
@@ -54,6 +55,16 @@ export const fetchResetPassword = createAsyncThunk(
       return rejectWithValue(error.response.data);
     }
   }
+);
+
+export const fetchGetGoogleUser = createAsyncThunk(
+  'auth/fetchGetGoogleUser',
+  async () => await AuthServices.getGoogleUser()
+);
+
+export const fetchGetRedirectUrl = createAsyncThunk(
+  'auth/fetchGetRedirectUrl',
+  async () => await AuthServices.getGoogleRedirectUrl()
 );
 
 export const fetchLogout = createAsyncThunk('auth/fetchLogout', async () => {
@@ -164,7 +175,23 @@ const authSlice = createSlice({
       .addCase(fetchResetPassword.rejected, (state, { payload }) => {
         state.status = 'error';
         state.error = payload.message;
-      });
+      })
+      .addCase(fetchGetGoogleUser.pending, (state) => {
+        state.status = 'loading';
+        state.error = null;
+      })
+      .addCase(fetchGetGoogleUser.fulfilled, (state, { payload }) => {
+        state.isAuth = true;
+        state.user = payload.data.user;
+        localStorage.setItem('token', payload.data.accessToken)
+      })
+      .addCase(fetchGetGoogleUser.rejected, (state, { payload }) => {
+        state.status = 'error';
+        state.error = payload.message
+      })
+      .addCase(fetchGetRedirectUrl.fulfilled, (state, { payload }) => {
+        state.redirectUrl = payload.data
+      })
   },
 });
 

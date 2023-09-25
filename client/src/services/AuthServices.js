@@ -23,4 +23,10 @@ export default class AuthServices {
   static async resetPassword(newPass, resetLink) {
     return $api.put('/api/user/reset-password', { newPass, resetLink });
   }
+  static async getGoogleRedirectUrl() {
+    return $api.get('/api/user/auth/google/url');
+  }
+  static async getGoogleUser() {
+    return $api.get('/api/user/auth/me');
+  }
 }

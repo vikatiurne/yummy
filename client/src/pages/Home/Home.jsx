@@ -10,6 +10,7 @@ import {
 } from './HomeSlice';
 
 import styles from './Home.module.css';
+import { fetchGetGoogleUser } from '../Auth/AuthSlice';
 
 function Home() {
   const categoryId = useSelector((state) => state.home.categoryId);
@@ -33,6 +34,10 @@ function Home() {
       fetchGetAllProdact({ categoryId, subcategoryId, page, limit, orderBy, sortBy })
     );
   }, [dispatch, categoryId, subcategoryId, page, limit, orderBy, sortBy, ratingById]);
+
+  useEffect(() => {
+    dispatch(fetchGetGoogleUser());
+  }, [dispatch]);
 
   return (
     <>

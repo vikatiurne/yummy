@@ -78,7 +78,7 @@ class UserController {
   }
 
   async check(req, res, next) {
-    const email = req.user.email;
+    const { email } = req.user;
     const user = await User.findOne({ where: { email } });
     const userDto = new UserDto(user);
     const tokens = tokenService.generateTokens({ ...userDto });
@@ -115,7 +115,7 @@ class UserController {
   async resetPassword(req, res, next) {
     try {
       const { newPass, resetLink } = req.body;
-      const userData =await userService.resetPassword(newPass, resetLink);
+      const userData = await userService.resetPassword(newPass, resetLink);
       return res.json(userData);
     } catch (error) {
       next(error);

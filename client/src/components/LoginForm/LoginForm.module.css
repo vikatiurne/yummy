@@ -28,7 +28,11 @@
 .formControl {
   padding-top: 1rem;
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
+  align-items: center;
+}
+.googleBtn{
+  padding: 0;
 }
 .success {
   background-color: #6e1e93;

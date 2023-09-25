@@ -1,15 +1,17 @@
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { RxEyeClosed, RxEyeOpen } from 'react-icons/rx';
-import { Navigate } from 'react-router-dom';
+import { Link, Navigate } from 'react-router-dom';
 
 import {
   fetchForgotPassword,
+  fetchGetRedirectUrl,
   fetchLogin,
   fetchRegistration,
 } from '../../pages/Auth/AuthSlice';
 import Button from '../UI/Button/Button';
 import AuthModal from '../Modals/AuthModal';
+import googleBtn from '../../assets/btn_google_signin.png';
 import styles from './LoginForm.module.css';
 
 const LoginForm = () => {
@@ -28,6 +30,11 @@ const LoginForm = () => {
 
   const isAuth = useSelector((state) => state.auth.isAuth);
   const err = useSelector((state) => state.auth.error);
+  const url = useSelector((state) => state.auth.redirectUrl);
+
+  useEffect(() => {
+    dispatch(fetchGetRedirectUrl());
+  }, [dispatch]);
 
   useEffect(() => {
     if (!!err) setModalActive(true);
@@ -138,6 +145,10 @@ const LoginForm = () => {
         </div>
 
         <div className={styles.formControl}>
+          <Link to={url}>
+            <img src={googleBtn} alt="google sing in" />
+          </Link>
+
           {login && (
             <Button className={styles.success} onclick={loginHandler}>
               Увійти

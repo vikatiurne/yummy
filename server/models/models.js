@@ -15,8 +15,8 @@ const User = sequelize.define('user', {
 const Token = sequelize.define('token', {
   id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
   userId: { type: DataTypes.INTEGER, references: { model: User, key: 'id' } },
-  refreshToken: { type: DataTypes.STRING, allowNull: false },
-  accessToken: { type: DataTypes.STRING, allowNull: false },
+  refreshToken: { type: DataTypes.STRING(300), allowNull: false },
+  accessToken: { type: DataTypes.STRING(300), allowNull: false },
 });
 
 const Basket = sequelize.define('basket', {
@@ -33,7 +33,6 @@ const Prodact = sequelize.define('prodact', {
   price: { type: DataTypes.INTEGER, allowNull: false },
   rating: {
     type: DataTypes.NUMERIC({ precision: 5, decimals: 1, zerofill: false }),
-    // type: DataTypes.NUMBER({ precision: 5, decimals: 1, zerofill: false }),
     defaultValue: 0,
   },
   sizes: { type: DataTypes.ARRAY(DataTypes.STRING) },

@@ -18,6 +18,7 @@ const Pagination = () => {
   const categoryId = useSelector((state) => state.home.categoryId);
   const subcategoryId = useSelector((state) => state.home.subcategoryId);
   const orderBy = useSelector((state) => state.home.orderBy);
+  const sortBy = useSelector((state) => state.home.sortBy);
 
   const pagesCount = Math.ceil(count / limit);
 
@@ -46,9 +47,10 @@ const Pagination = () => {
         page: activePage,
         limit,
         orderBy,
+        sortBy,
       })
     );
-  }, [dispatch, activePage, categoryId, subcategoryId, limit, orderBy]);
+  }, [dispatch, activePage, categoryId, subcategoryId, limit, orderBy, sortBy]);
 
   const prevHandler = () => {
     activePage !== 1
