@@ -22,7 +22,6 @@ const Rating = ({ rating, prodactId }) => {
     dispatch(fetchCheckVote({ prodactId, userId }));
     setActiveModal(true);
   };
-  console.log(activeModal)
 
   return (
     <>

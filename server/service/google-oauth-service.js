@@ -32,17 +32,15 @@ class GoogleOAuthService {
     return googleData;
   }
 
-  async registration(email, name) {
+  async registration(email, name, refreshToken) {
+    console.log(refreshToken);
     const candidate = await User.findOne({ where: { email } });
     if (candidate) {
       const userDto = new UserDto(candidate);
       const tokens = tokenService.generateTokens({ ...userDto });
-      await tokenService.saveToken(
-        userDto.id,
-        tokens.refreshToken,
-        tokens.accessToken
-      );
-      return { ...tokens, user: userDto };
+      const accessToken = tokens.accessToken;
+      await tokenService.saveToken(userDto.id, refreshToken, accessToken);
+      return { refreshToken, accessToken, user: userDto };
     }
 
     const activationLink = uuidv4();
@@ -60,13 +58,10 @@ class GoogleOAuthService {
 
     const userDto = new UserDto(user);
     const tokens = tokenService.generateTokens({ ...userDto });
-    await tokenService.saveToken(
-      userDto.id,
-      tokens.refreshToken,
-      tokens.accessToken
-    );
+    const accessToken = tokens.accessToken;
+    await tokenService.saveToken(userDto.id, refreshToken, accessToken);
 
-    return { ...tokens, user: userDto };
+    return { refreshToken, accessToken, user: userDto };
   }
 }
 

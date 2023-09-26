@@ -1,24 +1,28 @@
 import { useDispatch } from 'react-redux';
-import { useState } from 'react';
+import { useForm } from 'react-hook-form';
 
 import { fetchCreateCategory } from '../../pages/Admin/AdminSlice';
 
-import {Modal, Button} from '../index';
+import { Modal } from '../index';
 
 import styles from './Modals.module.css';
 
 const CreateCategory = ({ active, setActive }) => {
-  const [category, setCategory] = useState('');
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    reset,
+  } = useForm({ mode: 'onBlur' });
 
   const dispatch = useDispatch();
 
-  const addCategoryHandler = () => {
-    dispatch(fetchCreateCategory({ name: category }));
-    setCategory('');
-    setActive()
+  const addCategoryHandler = (data) => {
+    dispatch(fetchCreateCategory({ name: data.categoryName }));
+    setActive();
+    reset();
   };
-
-  const inputHandler = (e) => setCategory(e.target.value);
 
   return (
     <Modal active={active} setActive={setActive}>
@@ -26,16 +30,18 @@ const CreateCategory = ({ active, setActive }) => {
         <p>Додати категорію</p>
       </div>
       <div className={styles.modalContent}>
-        <form onSubmit={(e) => e.preventDefault()}>
+        <form onSubmit={handleSubmit(addCategoryHandler)}>
           <input
-            type="text"
+          className={!!errors.categoryName ? styles.redBorder : null}
+            {...register('categoryName', {
+              required: 'Поле має бути заповненим',
+            })}
             placeholder="Назва категорії"
-            value={category}
-            onChange={inputHandler}
           />
-          <Button className={styles.add} onclick={addCategoryHandler}>
-            Додати
-          </Button>
+          <div className={styles.errorMessage}>
+            {errors?.categoryName && <p>{errors?.categoryName?.message}</p>}
+          </div>
+          <input type="submit" className={styles.add} value="Додати" />
         </form>
       </div>
     </Modal>

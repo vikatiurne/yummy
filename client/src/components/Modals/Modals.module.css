@@ -25,8 +25,13 @@
   font-size: 1rem;
 }
 .add,
-.authModal button {
+.authModal .add {
   text-transform: uppercase;
+  border-radius: 5px;
+}
+
+.add:hover{
+  background-color: #f4dbfd;
 }
 .authModal p {
   margin-bottom: 0.5rem;
@@ -41,6 +46,18 @@
 .subcategoryList p {
   font-size: 1.1rem;
   text-decoration: underline;
+}
+.redBorder{
+border-color: red;
+}
+.errorMessage{
+  margin-bottom: 1rem;
+  color: #f06868;
+}
+.selectCategory {
+  margin: 0.5rem;
+  padding: 0.3rem;
+  font-size: 1.1rem;
 }
 .sizes,
 .options,

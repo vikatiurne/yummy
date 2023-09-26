@@ -12,7 +12,6 @@ import { fetchGetProdact } from './ProdactSlice';
 const Prodact = () => {
   const prodact = useSelector((state) => state.prodact.prodact);
   const status = useSelector((state) => state.prodact.status);
-  console.log(status)
  
   const { id } = useParams();
   const dispatch = useDispatch();

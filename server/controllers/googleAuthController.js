@@ -47,7 +47,7 @@ class GoogleAuthController {
         throw new Error(error.message);
       });
     const tokens = tokenService.generateTokens(googleUser);
-    res.cookie('refresh_token', tokens.refreshToken, {
+    res.cookie('refreshToken', tokens.refreshToken, {
       maxAge: 30 * 24 * 60 * 60 * 1000,
       httpOnly: true,
       secure: false,
@@ -56,12 +56,12 @@ class GoogleAuthController {
   }
 
   async getCurentGoogleUser(req, res) {
-    const token = await req.cookies['refresh_token'];
-    if (token) {
-      const userData = tokenService.validateRefreshToken(token);
+    const refreshToken = await req.cookies['refreshToken'];
+    if (refreshToken) {
+      const userData = tokenService.validateRefreshToken(refreshToken);
       const email = await userData.email;
       const name = await userData.name;
-      const user = await googleOAuthService.registration(email, name);
+      const user = await googleOAuthService.registration(email, name,refreshToken);
       return await res.json(user);
     }
   }

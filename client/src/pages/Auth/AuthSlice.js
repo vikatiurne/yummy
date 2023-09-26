@@ -145,10 +145,12 @@ const authSlice = createSlice({
       })
       .addCase(fetchAutoLogin.pending, (state) => {
         state.status = 'loading';
+        state.error = null;
       })
       .addCase(fetchAutoLogin.fulfilled, (state, { payload }) => {
         state.user = payload.data;
-        state.error = null;
+        console.log(payload)
+        state.error = payload.message;
         state.isAuth = true;
       })
       .addCase(fetchAutoLogin.rejected, (state) => {
@@ -187,7 +189,8 @@ const authSlice = createSlice({
       })
       .addCase(fetchGetGoogleUser.rejected, (state, { payload }) => {
         state.status = 'error';
-        state.error = payload.message
+        console.log(payload)
+        // state.error = payload.message
       })
       .addCase(fetchGetRedirectUrl.fulfilled, (state, { payload }) => {
         state.redirectUrl = payload.data
