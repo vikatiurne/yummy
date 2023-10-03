@@ -7,3 +7,4 @@ export { default as authReducer } from './Auth/AuthSlice.js';
 export { default as adminReducer } from './Admin/AdminSlice.js';
 export { default as homeReducer } from './Home/HomeSlice.js';
 export { default as prodactReducer } from './Prodact/ProdactSlice.js';
+export { default as basketReducer } from './Basket/BasketSlice.js';

@@ -2,7 +2,14 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import GetServices from '../../services/GetServices';
 import CreateServices from '../../services/CreateServices';
 
-const initialState = { status: 'idle',statusRate: 'idle', prodact: {}, rating: 0, msg: null };
+const initialState = {
+  status: 'idle',
+  statusRate: 'idle',
+  prodact: {},
+  rating: 0,
+  msg: null,
+  size: []
+};
 
 export const fetchGetProdact = createAsyncThunk(
   'prodact/fetchGetProdact',

@@ -34,12 +34,12 @@
   cursor: pointer;
 }
 .options2 {
-  margin-top: 0.4rem;
   display: flex;
   justify-content: space-around;
   align-items: center;
 }
 .options2 li {
+  padding: 0.4rem;
   width: 100%;
   cursor: pointer;
 }

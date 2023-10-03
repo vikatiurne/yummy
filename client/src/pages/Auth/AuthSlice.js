@@ -149,7 +149,6 @@ const authSlice = createSlice({
       })
       .addCase(fetchAutoLogin.fulfilled, (state, { payload }) => {
         state.user = payload.data;
-        console.log(payload)
         state.error = payload.message;
         state.isAuth = true;
       })
