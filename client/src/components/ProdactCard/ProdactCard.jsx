@@ -1,16 +1,18 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { FaPlus, FaLongArrowAltRight } from 'react-icons/fa';
 
 import Rating from '../Rating/Rating';
 
 import styles from './ProdactCard.module.css';
-import { formOrder } from '../../pages/Basket/BasketSlice.js';
+import { fetchAppendProdact } from '../../pages/Basket/BasketSlice.js';
 
 const ProdactCard = ({ img, name, sizes, price, rating, id }) => {
   const [activeSize, setActiveSize] = useState(sizes[0]);
   const [qtyProdact, setQtyProdact] = useState(parseInt(sizes[0]));
+
+  const userId = useSelector((state) => state.auth.user.id);
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -31,23 +33,24 @@ const ProdactCard = ({ img, name, sizes, price, rating, id }) => {
   };
 
   const addHandler = () => {
-    const priceForOne = price / parseInt(sizes[0]);
-    let unit;
-    if (activeSize) unit = activeSize.replace(/[^a-zа-яё]/gi, '');
-    const minOrder = +sizes[0].replace(/[^\d]/g, '');
-    dispatch(
-      formOrder({
-        img,
-        name,
-        price: priceForOne,
-        prodactId: id,
-        num: qtyProdact,
-        unit,
-        minOrder,
-      })
-    );
-    setQtyProdact(0);
-    setActiveSize(null);
+    // const priceForOne = price / p:arseInt(sizes[0]);
+    // let unit;
+    // if (activeSize) unit = activeSize.replace(/[^a-zа-яё]/gi, '');
+    // const minOrder = +sizes[0].replace(/[^\d]/g, '');
+    dispatch(fetchAppendProdact({ prodactId: id, qty: qtyProdact, userId }));
+    // dispatch(
+    //   formOrder({
+    //     img,
+    //     name,
+    //     price: priceForOne,
+    //     prodactId: id,
+    //     num: qtyProdact,
+    //     unit,
+    //     minOrder,
+    //   })
+    // );
+    // setQtyProdact(0);
+    // setActiveSize(null);
   };
 
   const redirectHandler = () => {

@@ -11,6 +11,7 @@ import {
 
 import styles from './Home.module.css';
 import { fetchGetGoogleUser } from '../Auth/AuthSlice';
+import { fetchGetBasket } from '../Basket/BasketSlice';
 
 function Home() {
   const categoryId = useSelector((state) => state.home.categoryId);
@@ -19,9 +20,10 @@ function Home() {
   const page = useSelector((state) => state.home.page);
   const orderBy = useSelector((state) => state.home.orderBy);
   const sortBy = useSelector((state) => state.home.sortBy);
-  const ratingById = useSelector(state=>state.prodact.rating)
+  const ratingById = useSelector((state) => state.prodact.rating);
   const prodactsList = useSelector((state) => state.home.prodacts);
-   
+  const userId = useSelector((state) => state.auth.user.id);
+
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -31,13 +33,34 @@ function Home() {
 
   useEffect(() => {
     dispatch(
-      fetchGetAllProdact({ categoryId, subcategoryId, page, limit, orderBy, sortBy })
+      fetchGetAllProdact({
+        categoryId,
+        subcategoryId,
+        page,
+        limit,
+        orderBy,
+        sortBy,
+      })
     );
-  }, [dispatch, categoryId, subcategoryId, page, limit, orderBy, sortBy, ratingById]);
+  }, [
+    dispatch,
+    categoryId,
+    subcategoryId,
+    page,
+    limit,
+    orderBy,
+    sortBy,
+    ratingById,
+  ]);
 
   useEffect(() => {
     dispatch(fetchGetGoogleUser());
   }, [dispatch]);
+
+  useEffect(() => {
+    console.log(userId);
+    if (!!userId) dispatch(fetchGetBasket({ userId }));
+  }, [dispatch, userId]);
 
   return (
     <>
@@ -45,7 +68,7 @@ function Home() {
         <Categories />
       </div>
       <SortBy />
-      <Prodacts prodacts={prodactsList}/>
+      <Prodacts prodacts={prodactsList} />
       <Pagination />
     </>
   );

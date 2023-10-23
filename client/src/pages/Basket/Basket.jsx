@@ -4,15 +4,23 @@ import { TiDelete } from 'react-icons/ti';
 import { AiFillPlusCircle, AiFillMinusCircle } from 'react-icons/ai';
 import { v4 as uuidv4 } from 'uuid';
 
-import styles from './Basket.module.css';
 import { deleteProdact, updateOrder } from './BasketSlice';
+import emptyBasketLogo from '../../assets/empty_basket.png';
+import styles from './Basket.module.css';
+import { Link } from 'react-router-dom';
 
 const Basket = () => {
   const [totalPrice, setTotalPrice] = useState('');
 
   const orders = useSelector((state) => state.basket.order);
+  const [emptyBasket, setEmptyBasket] = useState(false);
+  console.log(emptyBasket);
 
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (!orders.length) setEmptyBasket(true);
+  }, [orders]);
 
   useEffect(() => {
     const total = orders
@@ -68,17 +76,31 @@ const Basket = () => {
     </tr>
   ));
   return (
-    orders.length > 0 && (
-      <div className={styles.orderContainer}>
-        <table className={styles.table}>
-          <thead>{renderTable}</thead>
-        </table>
-        <div className={styles.total}>
-          <p>Сума замовлення</p>
-          <p>{totalPrice} грн</p>
+    <>
+      {emptyBasket ? (
+        <div className={styles.emptyBasket}>
+          <img src={emptyBasketLogo} alt="empty basket" />
+          <p>Ваш кошик порожній</p>
+          <Link to="/">Натисніть сюди, </Link>
+          <span>щоб почати покупки</span>
         </div>
-      </div>
-    )
+      ) : (
+        <div className={styles.orderContainer}>
+          <table className={styles.table}>
+            <thead>{renderTable}</thead>
+          </table>
+          <div className={styles.total}>
+            <p>Сума замовлення</p>
+            <p>{totalPrice} грн</p>
+          </div>
+          <div className={styles.checkout}>
+            <Link to="/checkout">
+              <button>Оформити замовлення</button>
+            </Link>
+          </div>
+        </div>
+      )}
+    </>
   );
 };
 

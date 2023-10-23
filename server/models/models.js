@@ -24,7 +24,7 @@ const Basket = sequelize.define('basket', {
 });
 
 const BasketProdact = sequelize.define('basket_prodact', {
-  id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
+  qty: { type: DataTypes.INTEGER, primaryKey: true },
 });
 
 const Prodact = sequelize.define('prodact', {
@@ -70,6 +70,9 @@ Token.belongsTo(User);
 
 User.hasMany(Rating);
 Rating.belongsTo(User);
+
+Basket.belongsToMany(Prodact, { through: BasketProdact, onDelete: 'CASCADE' })
+Prodact.belongsToMany(Basket, { through: BasketProdact, onDelete: 'CASCADE' })
 
 Basket.hasMany(BasketProdact);
 BasketProdact.belongsTo(Basket);

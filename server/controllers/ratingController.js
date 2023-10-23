@@ -23,15 +23,6 @@ class RatingController {
       next(error);
     }
   }
-  // async getRating(req, res, next) {
-  //   try {
-  //     const { userId } = req.query;
-  //     const data = await Rating.findAll({ where: { userId } });
-  //     return res.json(data);
-  //   } catch (error) {
-  //     next(error);
-  //   }
-  // }
 }
 
 export const ratingController = new RatingController();

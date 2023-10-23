@@ -35,4 +35,8 @@ export default class GetServices {
   static async checkVote(prodactId, userId) {
     return $api.get('api/rating/check', { params: { prodactId, userId } });
   }
+
+  static async getBasket(userId) {
+    return $api.get('api/basket/getone', { params: { userId } });
+  }
 }
