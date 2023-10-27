@@ -17,10 +17,8 @@ export default class BasketServices {
       params: { prodactId, minOrder },
     });
   }
-  static async remove(basketId, prodactId) {
-    return $api.put(`api/basket/prodact/${prodactId})/remove`, {
-      params: { basketId, prodactId },
-    });
+  static async remove(prodactId) {
+    return $api.put(`api/basket/prodact/${prodactId}/remove`);
   }
   static async clear(basketId) {
     return $api.put('api/basket/clear', { params: { basketId } });

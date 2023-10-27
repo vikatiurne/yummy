@@ -79,9 +79,6 @@ class BasketService {
       include: [{ model: Prodact, as: 'prodacts' }],
       where: { userId },
     });
-    if (!basket) {
-      basket = await Basket.create({ userId });
-    }
     const basketProdact = await BasketProdact.findOne({
       where: { basketId, prodactId },
     });

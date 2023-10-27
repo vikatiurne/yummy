@@ -9,26 +9,25 @@ import { fetchCheckVote } from '../../pages/Prodact/ProdactSlice';
 
 import styles from './Rating.module.css';
 
-const Rating = ({ rating, prodactId }) => {
+const Rating = ({ rating, prodactId,className }) => {
   const [activeModal, setActiveModal] = useState(false);
   const [activeModalAuth, setActiveModalAuth] = useState(false);
 
   const dispatch = useDispatch();
 
-  const user = useSelector((state) => state.auth.user);
+  const userId = useSelector((state) => state.auth.user.id);
 
   const clickRatingHandler = () => {
-    const userId = user.id;
     if (userId) {
       dispatch(fetchCheckVote({ prodactId, userId }));
       setActiveModal(true);
-    }else{
-      setActiveModalAuth(true)
+    } else {
+      setActiveModalAuth(true);
     }
   };
 
   return (
-    <>
+    <div className={className}>
       <CreateRating
         active={activeModal}
         prodactId={prodactId}
@@ -44,7 +43,7 @@ const Rating = ({ rating, prodactId }) => {
         <p>{rating}</p>
         <FaStar className={styles.activeStar} />
       </div>
-    </>
+    </div>
   );
 };
 

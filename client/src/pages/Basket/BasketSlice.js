@@ -7,6 +7,7 @@ const initialState = {
   status: 'idle',
   err: null,
   prodactsInBasket: [],
+  totalPrice: 0,
 };
 
 export const fetchGetBasket = createAsyncThunk(
@@ -55,11 +56,11 @@ export const fetchDecrement = createAsyncThunk(
     }
   }
 );
-export const fetchUpdate = createAsyncThunk(
-  'basket/fetchUpdate',
-  async ({ prodactId, minOrder, qty }, { rejectWithValue }) => {
+export const fetchRemoveProdact = createAsyncThunk(
+  'basket/fetchRemoveProdact',
+  async ({ prodactId }, { rejectWithValue }) => {
     try {
-      const response = await BasketServices.update(prodactId, minOrder, qty);
+      const response = await BasketServices.remove(prodactId);
       return response.data.prodacts;
     } catch (error) {
       return rejectWithValue(error.response.data);
@@ -70,7 +71,11 @@ export const fetchUpdate = createAsyncThunk(
 const BasketSlice = createSlice({
   name: 'basket',
   initialState,
-
+  reducers: {
+    getTotalPrice(state, { payload }) {
+      state.totalPrice = payload;
+    },
+  },
   extraReducers(builder) {
     builder
       .addCase(fetchGetBasket.pending, (state) => {
@@ -79,6 +84,7 @@ const BasketSlice = createSlice({
       })
       .addCase(fetchGetBasket.fulfilled, (state, { payload }) => {
         state.status = 'success';
+        payload.sort((a, b) => (a.id > b.id ? 1 : -1));
         state.order = payload;
       })
       .addCase(fetchGetBasket.rejected, (state, { payload }) => {
@@ -91,6 +97,7 @@ const BasketSlice = createSlice({
       })
       .addCase(fetchAppendProdact.fulfilled, (state, { payload }) => {
         state.status = 'success';
+        payload.sort((a, b) => (a.id > b.id ? 1 : -1));
         state.order = payload;
       })
       .addCase(fetchAppendProdact.rejected, (state, { payload }) => {
@@ -103,6 +110,7 @@ const BasketSlice = createSlice({
       })
       .addCase(fetchIncrement.fulfilled, (state, { payload }) => {
         state.status = 'success';
+        payload.sort((a, b) => (a.id > b.id ? 1 : -1));
         state.order = payload;
       })
       .addCase(fetchIncrement.rejected, (state, { payload }) => {
@@ -115,9 +123,23 @@ const BasketSlice = createSlice({
       })
       .addCase(fetchDecrement.fulfilled, (state, { payload }) => {
         state.status = 'success';
+        payload.sort((a, b) => (a.id > b.id ? 1 : -1));
         state.order = payload;
       })
       .addCase(fetchDecrement.rejected, (state, { payload }) => {
+        state.status = 'error';
+        state.err = payload.data.message;
+      })
+      .addCase(fetchRemoveProdact.pending, (state) => {
+        state.status = 'loading';
+        state.err = null;
+      })
+      .addCase(fetchRemoveProdact.fulfilled, (state, { payload }) => {
+        state.status = 'success';
+        payload.sort((a, b) => (a.id > b.id ? 1 : -1));
+        state.order = payload;
+      })
+      .addCase(fetchRemoveProdact.rejected, (state, { payload }) => {
         state.status = 'error';
         state.err = payload.data.message;
       });
@@ -167,6 +189,6 @@ const BasketSlice = createSlice({
   // },
 });
 
-// export const { putProdactsInBasket } = BasketSlice.actions;
+export const { getTotalPrice } = BasketSlice.actions;
 
 export default BasketSlice.reducer;

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { MdShoppingCart } from 'react-icons/md';
 import { IoPerson } from 'react-icons/io5';
@@ -9,15 +9,33 @@ import styles from './Header.module.css';
 import Button from '../UI/Button/Button';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchLogout } from '../../pages/Auth/AuthSlice';
+import { fetchGetBasket, getTotalPrice } from '../../pages/Basket/BasketSlice';
 
 const Header = () => {
   const isAuth = useSelector((state) => state.auth.isAuth);
   const userName = useSelector((state) => state.auth.user.name);
   const role = useSelector((state) => state.auth.user.role);
+  const price = useSelector((state) => state.basket.totalPrice);
+  const orders = useSelector((state) => state.basket.order);
+  const userId = useSelector((state) => state.auth.user.id);
 
   const dispatch = useDispatch();
 
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!!userId) dispatch(fetchGetBasket({ userId }));
+  }, [dispatch, userId]);
+
+  useEffect(() => {
+    const total = orders
+      .map(
+        (item) =>
+          item.basket_prodact.qty * (item.price / parseInt(item.sizes[0]))
+      )
+      .reduce((acc, val) => acc + val, 0);
+    dispatch(getTotalPrice(total));
+  }, [orders, dispatch]);
 
   const logoutHandler = () => {
     dispatch(fetchLogout());
@@ -64,11 +82,11 @@ const Header = () => {
       </Link>
       <Link to="basket">
         <Button className={styles.basket} onclick={() => {}}>
-          <p>500 ₴</p>
+          <p>{price} ₴</p>
           <span />
           <div className={styles.basketInfo}>
             <MdShoppingCart className={styles.basketIcon} />
-            <p>3</p>
+            <p>{orders.length}</p>
           </div>
         </Button>
       </Link>

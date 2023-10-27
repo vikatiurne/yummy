@@ -20,7 +20,7 @@ function Home() {
   const orderBy = useSelector((state) => state.home.orderBy);
   const sortBy = useSelector((state) => state.home.sortBy);
   const ratingById = useSelector((state) => state.prodact.rating);
-  const prodactsList = useSelector((state) => state.home.prodacts);
+ 
 
   const dispatch = useDispatch();
 
@@ -55,13 +55,14 @@ function Home() {
     dispatch(fetchGetGoogleUser());
   }, [dispatch]);
 
+
   return (
     <>
       <div className={styles.sortBy}>
         <Categories />
       </div>
       <SortBy />
-      <Prodacts prodacts={prodactsList} />
+      <Prodacts />
       <Pagination />
     </>
   );

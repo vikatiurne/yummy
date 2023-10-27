@@ -1,11 +1,12 @@
+import { useEffect } from 'react';
+import { useDispatch } from 'react-redux';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 
 import MainLayout from './hoc/Layuot/MainLayout';
-import { Admin, Auth, Basket, Checkout, Home, Prodact } from './pages';
-import { useDispatch } from 'react-redux';
-import { fetchAutoLogin } from './pages/Auth/AuthSlice';
-import { useEffect } from 'react';
 import { ForgotPassword } from './components';
+import { Admin, Auth, Basket, Checkout, Home, Prodact } from './pages';
+
+import { fetchAutoLogin } from './pages/Auth/AuthSlice';
 
 function App() {
   const dispatch = useDispatch();

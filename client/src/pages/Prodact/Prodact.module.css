@@ -1,23 +1,27 @@
-
-
-.rating {
-    position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: gold;
-    font-size: 2rem;
-    cursor: pointer;
-  }
-  
-  .rating p {
-    position: absolute;
-    display: block;
-    color: #6d1e93;
-    font-size: 1rem;
-    z-index: 3;
-  }
-  .activeStar{
-    color: gold;
-  }
-  
+.ptodactName {
+  text-transform: uppercase;
+  margin: 1.2rem 0 1rem 0;
+}
+.container {
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-start;
+  gap: 1rem;
+}
+.prodactImg {
+  position: relative;
+}
+.rate {
+  position: absolute;
+  top: 0;
+}
+.prodactInfo {
+  max-width: 40rem;
+  width: 100%;
+}
+.prodactInfo p{
+  margin-bottom: 0.7rem;
+}
+.prodactInfo p span{
+ padding-left: 0.7rem;
+}

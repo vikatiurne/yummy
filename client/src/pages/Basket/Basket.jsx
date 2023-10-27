@@ -7,41 +7,25 @@ import { v4 as uuidv4 } from 'uuid';
 
 import {
   fetchDecrement,
-  fetchGetBasket,
   fetchIncrement,
+  fetchRemoveProdact,
 } from './BasketSlice';
 
 import emptyBasketLogo from '../../assets/empty_basket.png';
 import styles from './Basket.module.css';
 
 const Basket = () => {
-  const [totalPrice, setTotalPrice] = useState('');
-
+  const totalPrice = useSelector((state) => state.basket.totalPrice);
   const orders = useSelector((state) => state.basket.order);
   const [emptyBasket, setEmptyBasket] = useState(false);
 
-  const userId = useSelector((state) => state.auth.user.id);
   const basketStatus = useSelector((state) => state.basket.status);
 
   const dispatch = useDispatch();
 
   useEffect(() => {
-    if (!!userId) dispatch(fetchGetBasket({ userId }));
-  }, [dispatch, userId]);
-
-  useEffect(() => {
     if (orders.length === 0 && basketStatus === 'success') setEmptyBasket(true);
   }, [orders, basketStatus]);
-
-  useEffect(() => {
-    const total = orders
-      .map(
-        (item) =>
-          item.basket_prodact.qty * (item.price / parseInt(item.sizes[0]))
-      )
-      .reduce((acc, val) => acc + val, 0);
-    setTotalPrice(total);
-  }, [orders]);
 
   const subHandler = (id, minOrder) => {
     dispatch(fetchDecrement({ prodactId: id, minOrder }));
@@ -51,16 +35,20 @@ const Basket = () => {
   };
 
   const delHandler = (id) => {
-    // dispatch(deleteProdact({ prodactId: id }));
+    dispatch(fetchRemoveProdact({ prodactId: id }));
   };
-console.log(orders)
+
   const renderTable = orders.map((item, i) => (
     <tr key={uuidv4()}>
       <td>{i + 1}</td>
       <td>
-        <img src={process.env.REACT_APP_API_URL + item.img} alt={item.name} />
+        <Link to={`/prodact/${item.id}`}>
+          <img src={process.env.REACT_APP_API_URL + item.img} alt={item.name} />
+        </Link>
       </td>
-      <td>{item.name}</td>
+      <td>
+        <Link to={`/prodact/${item.id}`}>{item.name} </Link>
+      </td>
       <td>
         <AiFillMinusCircle
           className={styles.update}
