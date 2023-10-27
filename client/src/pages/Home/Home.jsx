@@ -8,10 +8,9 @@ import {
   fetchGetCategory,
   fetchGetSubcategory,
 } from './HomeSlice';
+import { fetchGetGoogleUser } from '../Auth/AuthSlice';
 
 import styles from './Home.module.css';
-import { fetchGetGoogleUser } from '../Auth/AuthSlice';
-import { fetchGetBasket } from '../Basket/BasketSlice';
 
 function Home() {
   const categoryId = useSelector((state) => state.home.categoryId);
@@ -22,7 +21,6 @@ function Home() {
   const sortBy = useSelector((state) => state.home.sortBy);
   const ratingById = useSelector((state) => state.prodact.rating);
   const prodactsList = useSelector((state) => state.home.prodacts);
-  const userId = useSelector((state) => state.auth.user.id);
 
   const dispatch = useDispatch();
 
@@ -56,11 +54,6 @@ function Home() {
   useEffect(() => {
     dispatch(fetchGetGoogleUser());
   }, [dispatch]);
-
-  useEffect(() => {
-    console.log(userId);
-    if (!!userId) dispatch(fetchGetBasket({ userId }));
-  }, [dispatch, userId]);
 
   return (
     <>

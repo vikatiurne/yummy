@@ -2,19 +2,19 @@ import $api from '../http/axios';
 
 export default class BasketServices {
   static async append(prodactId, qty, userId) {
-    return $api.put(`api/basket/prodact/${prodactId}/append/${qty}`, {
-      params: { userId },
+    return $api.put(`api/basket/prodact/${prodactId}/append/1`, {
+      params: { userId, qty },
     });
   }
 
-  static async increment(basketId, prodactId, qty) {
-    return $api.put(`api/basket/prodact/${prodactId}/increment/${qty}`, {
-      params: { basketId, prodactId, qty },
+  static async increment(prodactId) {
+    return $api.put(`api/basket/prodact/${prodactId}/increment`, {
+      params: { prodactId },
     });
   }
-  static async decrement(basketId, prodactId, qty) {
-    return $api.put(`api/basket/prodact/${prodactId}/decrement/${qty}`, {
-      params: { basketId, prodactId, qty },
+  static async decrement(prodactId, minOrder) {
+    return $api.put(`api/basket/prodact/${prodactId}/decrement/${minOrder}`, {
+      params: { prodactId, minOrder },
     });
   }
   static async remove(basketId, prodactId) {

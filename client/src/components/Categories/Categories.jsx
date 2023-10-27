@@ -20,7 +20,7 @@ const Categories = () => {
   const categoryId = useSelector((state) => state.home.categoryId);
 
   const dispatch = useDispatch();
-  
+
   useEffect(() => {
     if (categoryId) {
       const currentCategory = categories.filter(
@@ -30,9 +30,7 @@ const Categories = () => {
       setActiveItem(name);
       setSelectedSort(name);
     }
-  }, [categories, categoryId,dispatch]);
-
-  
+  }, [categories, categoryId, dispatch]);
 
   const clickAllCategoryHandler = () => {
     setActiveItem(null);
@@ -91,21 +89,21 @@ const Categories = () => {
 
   return (
     <>
-        <ul className={styles.sortByButtons}>
-          <li
-            className={activeItem === null ? styles.active : null}
-            onClick={clickAllCategoryHandler}
-          >
-            Всі
-          </li>
-          {renderCategory}
-        </ul>
-        <div className={styles.containerContent}>
-          <h2>
-            {activeItem === null ? 'Вся випічка' : selectedSort}
-            {!!subcategory ? ` (${subcategory.name})` : null}
-          </h2>
-        </div>
+      <ul className={styles.sortByButtons}>
+        <li
+          className={activeItem === null ? styles.active : null}
+          onClick={clickAllCategoryHandler}
+        >
+          Всі
+        </li>
+        {renderCategory}
+      </ul>
+      <div className={styles.containerContent}>
+        <h2>
+          {activeItem === null ? 'Вся випічка' : selectedSort}
+          {!!subcategory ? ` (${subcategory.name})` : null}
+        </h2>
+      </div>
     </>
   );
 };

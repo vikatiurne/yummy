@@ -2,14 +2,19 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import GetServices from '../../services/GetServices';
 import BasketServices from '../../services/BasketServices';
 
-// const initialState = { order: [] };
-const initialState = { order: [], status: 'idle', err: null };
+const initialState = {
+  order: [],
+  status: 'idle',
+  err: null,
+  prodactsInBasket: [],
+};
 
 export const fetchGetBasket = createAsyncThunk(
   'basket/fetchGetBasket',
   async ({ userId }, { rejectWithValue }) => {
     try {
-      return await GetServices.getBasket(userId);
+      const response = await GetServices.getBasket(userId);
+      return response.data.prodacts;
     } catch (error) {
       return rejectWithValue(error.response.data);
     }
@@ -20,8 +25,42 @@ export const fetchAppendProdact = createAsyncThunk(
   'basket/fetchAppendProdact',
   async ({ prodactId, qty, userId }, { rejectWithValue }) => {
     try {
-      console.log(qty,userId)
-      return await BasketServices.append(prodactId, qty, userId);
+      const response = await BasketServices.append(prodactId, qty, userId);
+      return response.data.prodacts;
+    } catch (error) {
+      return rejectWithValue(error.response.data);
+    }
+  }
+);
+
+export const fetchIncrement = createAsyncThunk(
+  'basket/fetchIncrement',
+  async ({ prodactId }, { rejectWithValue }) => {
+    try {
+      const response = await BasketServices.increment(prodactId);
+      return response.data.prodacts;
+    } catch (error) {
+      return rejectWithValue(error.response.data);
+    }
+  }
+);
+export const fetchDecrement = createAsyncThunk(
+  'basket/fetchDecrement',
+  async ({ prodactId, minOrder }, { rejectWithValue }) => {
+    try {
+      const response = await BasketServices.decrement(prodactId, minOrder);
+      return response.data.prodacts;
+    } catch (error) {
+      return rejectWithValue(error.response.data);
+    }
+  }
+);
+export const fetchUpdate = createAsyncThunk(
+  'basket/fetchUpdate',
+  async ({ prodactId, minOrder, qty }, { rejectWithValue }) => {
+    try {
+      const response = await BasketServices.update(prodactId, minOrder, qty);
+      return response.data.prodacts;
     } catch (error) {
       return rejectWithValue(error.response.data);
     }
@@ -40,11 +79,9 @@ const BasketSlice = createSlice({
       })
       .addCase(fetchGetBasket.fulfilled, (state, { payload }) => {
         state.status = 'success';
-        console.log('basket:', payload);
         state.order = payload;
       })
       .addCase(fetchGetBasket.rejected, (state, { payload }) => {
-        console.log(payload);
         state.status = 'error';
         if (payload && payload.length >= 0) state.err = payload.data.message;
       })
@@ -54,9 +91,33 @@ const BasketSlice = createSlice({
       })
       .addCase(fetchAppendProdact.fulfilled, (state, { payload }) => {
         state.status = 'success';
-        console.log(payload);
+        state.order = payload;
       })
       .addCase(fetchAppendProdact.rejected, (state, { payload }) => {
+        state.status = 'error';
+        state.err = payload.data.message;
+      })
+      .addCase(fetchIncrement.pending, (state) => {
+        state.status = 'loading';
+        state.err = null;
+      })
+      .addCase(fetchIncrement.fulfilled, (state, { payload }) => {
+        state.status = 'success';
+        state.order = payload;
+      })
+      .addCase(fetchIncrement.rejected, (state, { payload }) => {
+        state.status = 'error';
+        state.err = payload.data.message;
+      })
+      .addCase(fetchDecrement.pending, (state) => {
+        state.status = 'loading';
+        state.err = null;
+      })
+      .addCase(fetchDecrement.fulfilled, (state, { payload }) => {
+        state.status = 'success';
+        state.order = payload;
+      })
+      .addCase(fetchDecrement.rejected, (state, { payload }) => {
         state.status = 'error';
         state.err = payload.data.message;
       });
@@ -106,6 +167,6 @@ const BasketSlice = createSlice({
   // },
 });
 
-export const { formOrder, updateOrder, deleteProdact } = BasketSlice.actions;
+// export const { putProdactsInBasket } = BasketSlice.actions;
 
 export default BasketSlice.reducer;

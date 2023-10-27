@@ -4,9 +4,9 @@ import { useDispatch, useSelector } from 'react-redux';
 import { FaPlus, FaLongArrowAltRight } from 'react-icons/fa';
 
 import Rating from '../Rating/Rating';
+import { fetchAppendProdact } from '../../pages/Basket/BasketSlice';
 
 import styles from './ProdactCard.module.css';
-import { fetchAppendProdact } from '../../pages/Basket/BasketSlice.js';
 
 const ProdactCard = ({ img, name, sizes, price, rating, id }) => {
   const [activeSize, setActiveSize] = useState(sizes[0]);
@@ -33,24 +33,9 @@ const ProdactCard = ({ img, name, sizes, price, rating, id }) => {
   };
 
   const addHandler = () => {
-    // const priceForOne = price / p:arseInt(sizes[0]);
-    // let unit;
-    // if (activeSize) unit = activeSize.replace(/[^a-zа-яё]/gi, '');
-    // const minOrder = +sizes[0].replace(/[^\d]/g, '');
-    dispatch(fetchAppendProdact({ prodactId: id, qty: qtyProdact, userId }));
-    // dispatch(
-    //   formOrder({
-    //     img,
-    //     name,
-    //     price: priceForOne,
-    //     prodactId: id,
-    //     num: qtyProdact,
-    //     unit,
-    //     minOrder,
-    //   })
-    // );
-    // setQtyProdact(0);
-    // setActiveSize(null);
+    dispatch(
+      fetchAppendProdact({ prodactId: id, qty: qtyProdact, userId: userId })
+    );
   };
 
   const redirectHandler = () => {

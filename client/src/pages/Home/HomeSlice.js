@@ -28,7 +28,7 @@ export const fetchGetSubcategory = createAsyncThunk(
 
 export const fetchGetAllProdact = createAsyncThunk(
   'home/fetchGetAllProdact',
-  async ({ categoryId, subcategoryId, page, limit, orderBy, sortBy='ASC' }) =>
+  async ({ categoryId, subcategoryId, page, limit, orderBy, sortBy = 'ASC' }) =>
     await GetServices.getAllProdacts(
       categoryId,
       subcategoryId,

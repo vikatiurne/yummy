@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 
 
-import Spiner from '../../components/UI/Spinner/Spiner';
+import { spinners } from '../../components/UI/Spinner/Spiner';
 import Rating from '../../components/Rating/Rating';
 
 import { fetchGetProdact } from './ProdactSlice';
@@ -21,7 +21,7 @@ const Prodact = () => {
   }, [dispatch, id]);
 
   return status !== 'success' ? (
-    <Spiner />
+    spinners.fidgetSpinner()
   ) : (
     <div>
       <img

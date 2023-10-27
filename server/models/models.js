@@ -24,7 +24,8 @@ const Basket = sequelize.define('basket', {
 });
 
 const BasketProdact = sequelize.define('basket_prodact', {
-  qty: { type: DataTypes.INTEGER, primaryKey: true },
+  id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
+  qty: { type: DataTypes.INTEGER },
 });
 
 const Prodact = sequelize.define('prodact', {
@@ -58,10 +59,6 @@ const Rating = sequelize.define('rating', {
   rate: { type: DataTypes.INTEGER, allowNull: false },
 });
 
-// const CategorySubcategory = sequelize.define('category_subcategory', {
-//   id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
-// });
-
 User.hasOne(Basket);
 Basket.belongsTo(User);
 
@@ -71,8 +68,8 @@ Token.belongsTo(User);
 User.hasMany(Rating);
 Rating.belongsTo(User);
 
-Basket.belongsToMany(Prodact, { through: BasketProdact, onDelete: 'CASCADE' })
-Prodact.belongsToMany(Basket, { through: BasketProdact, onDelete: 'CASCADE' })
+Basket.belongsToMany(Prodact, { through: BasketProdact, onDelete: 'CASCADE' });
+Prodact.belongsToMany(Basket, { through: BasketProdact, onDelete: 'CASCADE' });
 
 Basket.hasMany(BasketProdact);
 BasketProdact.belongsTo(Basket);

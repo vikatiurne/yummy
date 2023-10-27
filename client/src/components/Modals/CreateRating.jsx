@@ -4,7 +4,7 @@ import { v4 as uuidv4 } from 'uuid';
 
 import Modal from '../UI/Modal/Modal';
 import Button from '../UI/Button/Button';
-import Spiner from '../UI/Spinner/Spiner';
+import { spinners } from '../UI/Spinner/Spiner';
 
 import {
   fetchCreateRating,
@@ -33,7 +33,7 @@ const CreateRating = ({ active, setActive, prodactId }) => {
   const renderContent = (
     <Modal active={active} setActive={setActive}>
       {status === 'loading' ? (
-        <Spiner />
+        spinners.fidgetSpinner()
       ) : !msg ? (
         <>
           <div className={styles.stars}>

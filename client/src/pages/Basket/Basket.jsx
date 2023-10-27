@@ -1,47 +1,59 @@
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { Link } from 'react-router-dom';
 import { TiDelete } from 'react-icons/ti';
 import { AiFillPlusCircle, AiFillMinusCircle } from 'react-icons/ai';
 import { v4 as uuidv4 } from 'uuid';
 
-import { deleteProdact, updateOrder } from './BasketSlice';
+import {
+  fetchDecrement,
+  fetchGetBasket,
+  fetchIncrement,
+} from './BasketSlice';
+
 import emptyBasketLogo from '../../assets/empty_basket.png';
 import styles from './Basket.module.css';
-import { Link } from 'react-router-dom';
 
 const Basket = () => {
   const [totalPrice, setTotalPrice] = useState('');
 
   const orders = useSelector((state) => state.basket.order);
   const [emptyBasket, setEmptyBasket] = useState(false);
-  console.log(emptyBasket);
+
+  const userId = useSelector((state) => state.auth.user.id);
+  const basketStatus = useSelector((state) => state.basket.status);
 
   const dispatch = useDispatch();
 
   useEffect(() => {
-    if (!orders.length) setEmptyBasket(true);
-  }, [orders]);
+    if (!!userId) dispatch(fetchGetBasket({ userId }));
+  }, [dispatch, userId]);
+
+  useEffect(() => {
+    if (orders.length === 0 && basketStatus === 'success') setEmptyBasket(true);
+  }, [orders, basketStatus]);
 
   useEffect(() => {
     const total = orders
-      .map((item) => item.num * item.price)
+      .map(
+        (item) =>
+          item.basket_prodact.qty * (item.price / parseInt(item.sizes[0]))
+      )
       .reduce((acc, val) => acc + val, 0);
     setTotalPrice(total);
   }, [orders]);
 
-  console.log(orders);
-
-  const subHandler = (id) => {
-    dispatch(updateOrder({ prodactId: id, increase: false }));
+  const subHandler = (id, minOrder) => {
+    dispatch(fetchDecrement({ prodactId: id, minOrder }));
   };
   const addHandler = (id) => {
-    dispatch(updateOrder({ prodactId: id, increase: true }));
+    dispatch(fetchIncrement({ prodactId: id }));
   };
 
   const delHandler = (id) => {
-    dispatch(deleteProdact({ prodactId: id }));
+    // dispatch(deleteProdact({ prodactId: id }));
   };
-
+console.log(orders)
   const renderTable = orders.map((item, i) => (
     <tr key={uuidv4()}>
       <td>{i + 1}</td>
@@ -52,24 +64,31 @@ const Basket = () => {
       <td>
         <AiFillMinusCircle
           className={styles.update}
-          onClick={() => subHandler(item.prodactId)}
+          onClick={() =>
+            subHandler(item.basket_prodact.prodactId, parseInt(item.sizes[0]))
+          }
         />
       </td>
 
       <td>
-        {item.num} {item.unit}
+        <div className={styles.qtyField}>
+          {item.basket_prodact.qty}
+          {item.sizes[0].replace(/[^a-zа-яё]/gi, '')}
+        </div>
       </td>
       <td>
         <AiFillPlusCircle
           className={styles.update}
-          onClick={() => addHandler(item.prodactId)}
+          onClick={() => addHandler(item.basket_prodact.prodactId)}
         />
       </td>
-      <td>{item.price * item.num} грн</td>
+      <td>
+        {(item.price / parseInt(item.sizes[0])) * item.basket_prodact.qty} грн
+      </td>
       <td>
         <TiDelete
           className={styles.del}
-          onClick={() => delHandler(item.prodactId)}
+          onClick={() => delHandler(item.basket_prodact.prodactId)}
           title="видалити"
         />
       </td>
@@ -85,20 +104,22 @@ const Basket = () => {
           <span>щоб почати покупки</span>
         </div>
       ) : (
-        <div className={styles.orderContainer}>
-          <table className={styles.table}>
-            <thead>{renderTable}</thead>
-          </table>
-          <div className={styles.total}>
-            <p>Сума замовлення</p>
-            <p>{totalPrice} грн</p>
+        (basketStatus !== 'loading' || basketStatus !== 'idle') && (
+          <div className={styles.orderContainer}>
+            <table className={styles.table}>
+              <thead>{renderTable}</thead>
+            </table>
+            <div className={styles.total}>
+              <p>Сума замовлення</p>
+              <p>{totalPrice} грн</p>
+            </div>
+            <div className={styles.checkout}>
+              <Link to="/checkout">
+                <button>Оформити замовлення</button>
+              </Link>
+            </div>
           </div>
-          <div className={styles.checkout}>
-            <Link to="/checkout">
-              <button>Оформити замовлення</button>
-            </Link>
-          </div>
-        </div>
+        )
       )}
     </>
   );

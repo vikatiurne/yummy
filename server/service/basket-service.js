@@ -3,7 +3,9 @@ import { Basket, BasketProdact, Prodact } from '../models/models.js';
 class BasketService {
   async getOne(basketId, userId) {
     let basket = await Basket.findByPk(basketId, {
-      include: [{ model: Prodact, attributes: ['id', 'name', 'price'] }],
+      include: [
+        { model: Prodact, attributes: ['id', 'name', 'price', 'img', 'sizes'] },
+      ],
       attributes: ['id'],
       where: { userId },
     });
@@ -14,14 +16,15 @@ class BasketService {
   }
 
   async create(userId) {
-    console.log(userId);
     return await Basket.create({ userId });
   }
 
   async append(basketId, prodactId, qty, userId) {
     let basket = await Basket.findByPk(basketId, {
       attributes: ['id'],
-      include: [{ model: Prodact, attributes: ['id', 'name', 'price'] }],
+      include: [
+        { model: Prodact, attributes: ['id', 'name', 'price', 'img', 'sizes'] },
+      ],
       where: { userId },
     });
     if (!basket) {
@@ -39,43 +42,35 @@ class BasketService {
     return basket;
   }
 
-  async increment(basketId, prodactId, qty, userId) {
+  async increment(basketId, prodactId) {
     let basket = await Basket.findByPk(basketId, {
       include: [{ model: Prodact, as: 'prodacts' }],
-      where: { userId },
     });
-    if (!basket) {
-      basket = await Basket.create({ userId });
-    }
     const basketProdact = await BasketProdact.findOne({
       where: { basketId, prodactId },
     });
     if (basketProdact) {
-      await basketProdact.increment('qty', { by: +qty });
+      await basketProdact.increment('qty', { by: 1 });
       await basket.reload();
     }
     return basket;
   }
 
-  async decrement(basketId, prodactId, qty, userId) {
+  async decrement(basketId, prodactId, minOrder) {
     let basket = await Basket.findByPk(basketId, {
       include: [{ model: Prodact, as: 'prodacts' }],
-      where: { userId },
     });
-    if (!basket) {
-      basket = await Basket.create({ userId });
-    }
     const basketProdact = await BasketProdact.findOne({
       where: { basketId, prodactId },
     });
-    if (basketProdact) {
-      if (basketProdact.qty > qty) {
-        await basketProdact.decrement();
-      } else {
-        await basketProdact.destroy();
-      }
-      await basket.reload();
+
+    if (basketProdact.qty == minOrder) {
+      await basketProdact.destroy({ where: { prodactId } });
+    } else {
+      await basketProdact.decrement('qty', { by: 1 });
     }
+    await basket.reload();
+
     return basket;
   }
 
