@@ -74,6 +74,7 @@ const HomeSlice = createSlice({
         state.subcategory = payload.data;
       })
       .addCase(fetchGetAllProdact.fulfilled, (state, { payload }) => {
+        // payload.data.rows.sort((a, b) => (a.rating > b.rating ? -1 : 1))
         state.prodacts = payload.data.rows;
         state.count = payload.data.count;
       });

@@ -9,7 +9,7 @@ import { fetchCheckVote } from '../../pages/Prodact/ProdactSlice';
 
 import styles from './Rating.module.css';
 
-const Rating = ({ rating, prodactId,className }) => {
+const Rating = ({ rating, prodactId, className }) => {
   const [activeModal, setActiveModal] = useState(false);
   const [activeModalAuth, setActiveModalAuth] = useState(false);
 

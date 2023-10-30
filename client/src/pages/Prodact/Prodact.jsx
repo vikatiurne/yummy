@@ -9,19 +9,25 @@ import { fetchGetProdact } from './ProdactSlice';
 
 import styles from './Prodact.module.css';
 import { Button } from '../../components';
+import { fetchAppendProdact } from '../Basket/BasketSlice';
 
 const Prodact = () => {
   const [inBasket, setInBasket] = useState(false);
   const [qtyInBasket, setQtyInBasket] = useState(null);
-
+  const [qtyAddProdact, setQtyAddProdact] = useState(0);
+  
   const prodact = useSelector((state) => state.prodact.prodact);
-  const basket = useSelector((state) => state.basket.order);
-  console.log(basket);
-
+  const ratingById = useSelector((state) => state.prodact.rating);
+   const basket = useSelector((state) => state.basket.order);
+  const userId = useSelector((state) => state.auth.user.id);
   const status = useSelector((state) => state.prodact.status);
 
   const { id } = useParams();
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (status === 'success') setQtyAddProdact(parseInt(prodact.sizes[0]));
+  }, [prodact, status]);
 
   useEffect(() => {
     const prodactInBasket = basket.filter((prodact) => prodact.id === +id);
@@ -36,7 +42,18 @@ const Prodact = () => {
 
   useEffect(() => {
     dispatch(fetchGetProdact({ id }));
-  }, [dispatch, id]);
+  }, [dispatch, id, ratingById]);
+
+  const changeQtyHandler = (e) => {
+    setQtyAddProdact(e.target.value);
+  };
+
+  const addHandler = () => {
+    const minOrder = parseInt(prodact.sizes[0]);
+    let qty;
+    qtyAddProdact >= minOrder ? (qty = qtyAddProdact) : (qty = minOrder);
+    dispatch(fetchAppendProdact({ prodactId: id, qty, userId: userId }));
+  };
 
   return status !== 'success' ? (
     spinners.fidgetSpinner()
@@ -75,11 +92,26 @@ const Prodact = () => {
       </div>
 
       {inBasket ? (
-        <Link to="/basket">
-          <Button>Товар у кошику ({qtyInBasket})</Button>
-        </Link>
+        <div className={styles.addProdact}>
+          <Link to="/basket">
+            <Button className={styles.btn}>
+              Товар у кошику ({qtyInBasket})
+            </Button>
+          </Link>
+        </div>
       ) : (
-        <Button>Додати</Button>
+        <div className={styles.addProdact}>
+          <input
+            type="number"
+            value={qtyAddProdact}
+            onChange={(e) => changeQtyHandler(e)}
+            autoFocus
+          />
+          <p>{prodact.sizes[0].replace(/[^a-zа-яё]/gi, '')}</p>
+          <Button className={styles.btn} onclick={addHandler}>
+            Покласти у кошик
+          </Button>
+        </div>
       )}
     </>
   );

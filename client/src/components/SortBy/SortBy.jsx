@@ -1,9 +1,10 @@
 import { useEffect, useRef, useState } from 'react';
+import { useDispatch } from 'react-redux';
 import { BsTriangleFill } from 'react-icons/bs';
 import { v4 as uuidv4 } from 'uuid';
 
 import styles from './SortBy.module.css';
-import { useDispatch } from 'react-redux';
+
 import { selectedSortBy } from '../../pages/Home/HomeSlice';
 
 const sortList = ['популярністю', 'ціною', 'алфавітом'];

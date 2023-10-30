@@ -8,7 +8,7 @@ import { spinners } from '../UI/Spinner/Spiner';
 
 import {
   fetchCreateRating,
-  fetchGetRating,
+  // fetchGetRating,
 } from '../../pages/Prodact/ProdactSlice';
 
 import styles from './Modals.module.css';
@@ -25,8 +25,8 @@ const CreateRating = ({ active, setActive, prodactId }) => {
   const dispatch = useDispatch();
 
   const voteHandler = () => {
-    dispatch(fetchGetRating({ prodactId }));
     dispatch(fetchCreateRating({ rating, prodactId }));
+    // dispatch(fetchGetRating({ prodactId }));
     setActive();
   };
 
