@@ -9,7 +9,7 @@ import styles from './Header.module.css';
 import Button from '../UI/Button/Button';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchLogout } from '../../pages/Auth/AuthSlice';
-import { fetchGetBasket, getTotalPrice } from '../../pages/Basket/BasketSlice';
+import { fetchGetBasket, getTotalPrice, resetBasket } from '../../pages/Basket/BasketSlice';
 
 const Header = () => {
   const isAuth = useSelector((state) => state.auth.isAuth);
@@ -28,18 +28,23 @@ const Header = () => {
   }, [dispatch, userId]);
 
   useEffect(() => {
-    const total = orders
-      .map(
-        (item) =>
-          item.basket_prodact.qty * (item.price / parseInt(item.sizes[0]))
-      )
-      .reduce((acc, val) => acc + val, 0);
-    dispatch(getTotalPrice(total));
+    if (orders) {
+      const total = orders
+        .map(
+          (item) =>
+            item.basket_prodact.qty * (item.price / parseInt(item.sizes[0]))
+        )
+        .reduce((acc, val) => acc + val, 0);
+      dispatch(getTotalPrice(total));
+    }
   }, [orders, dispatch]);
 
   const logoutHandler = () => {
     dispatch(fetchLogout());
+    dispatch(resetBasket())
+    navigate('/')
   };
+console.log("isAuth:", isAuth)
   return (
     <div className={styles.logoWrapper}>
       <Button className={styles.basket}>
@@ -52,14 +57,12 @@ const Header = () => {
           </>
         ) : (
           <>
-            <Link to="/">
               <p onClick={logoutHandler}>Вихід</p>
-            </Link>
             <span />
           </>
         )}
         {!isAuth ? (
-          <IoPerson className={styles.basketIcon} onClick={logoutHandler} />
+          <IoPerson className={styles.basketIcon} onClick={()=>{}} />
         ) : (
           <>
             {role === 'ADMIN' ? (
@@ -81,14 +84,14 @@ const Header = () => {
         </div>
       </Link>
       <Link to="basket">
-        <Button className={styles.basket} onclick={() => {}}>
+        <div className={styles.basket}>
           <p>{price} ₴</p>
           <span />
           <div className={styles.basketInfo}>
             <MdShoppingCart className={styles.basketIcon} />
-            <p>{orders.length}</p>
+            <p>{orders ? orders.length : 0}</p>
           </div>
-        </Button>
+        </div>
       </Link>
     </div>
   );

@@ -2,7 +2,7 @@ import { Basket, BasketProdact, Prodact } from '../models/models.js';
 
 class BasketService {
   async getOne(basketId, userId) {
-    let basket = await Basket.findByPk(basketId, {
+    let basket = await Basket.findOne({
       include: [
         { model: Prodact, attributes: ['id', 'name', 'price', 'img', 'sizes'] },
       ],
@@ -25,7 +25,6 @@ class BasketService {
       include: [
         { model: Prodact, attributes: ['id', 'name', 'price', 'img', 'sizes'] },
       ],
-      where: { userId },
     });
     if (!basket) {
       basket = await Basket.create({ userId });
@@ -77,7 +76,6 @@ class BasketService {
   async remove(basketId, prodactId, userId) {
     let basket = await Basket.findByPk(basketId, {
       include: [{ model: Prodact, as: 'prodacts' }],
-      where: { userId },
     });
     const basketProdact = await BasketProdact.findOne({
       where: { basketId, prodactId },
@@ -92,7 +90,6 @@ class BasketService {
   async clear(basketId, userId) {
     let basket = await Basket.findByPk(basketId, {
       include: [{ model: Prodact, as: 'prodacts' }],
-      where: { userId },
     });
     if (!basket) {
       basket = await Basket.create({ userId });
@@ -103,6 +100,17 @@ class BasketService {
     return basket;
   }
 
+  async delete() {
+    let basket = await Basket.findOne({
+      include: [{ model: Prodact, as: 'prodacts' }],
+      where: { userId: null },
+    });
+    if (!basket) {
+      throw new Error('Корзина не знайдена у БД');
+    }
+    await basket.destroy();
+    return basket;
+  }
   //   async delete(basketId){
   //     let basket = await Basket.findByPk(basketId, {
   //         include: [{model: Prodact, as: 'prodacts'}]

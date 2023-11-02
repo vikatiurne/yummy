@@ -4,12 +4,12 @@ import { Link, useParams } from 'react-router-dom';
 
 import { spinners } from '../../components/UI/Spinner/Spiner';
 import Rating from '../../components/Rating/Rating';
+import { Button } from '../../components';
 
 import { fetchGetProdact } from './ProdactSlice';
+import { fetchAppendProdact } from '../Basket/BasketSlice';
 
 import styles from './Prodact.module.css';
-import { Button } from '../../components';
-import { fetchAppendProdact } from '../Basket/BasketSlice';
 
 const Prodact = () => {
   const [inBasket, setInBasket] = useState(false);

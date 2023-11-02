@@ -6,8 +6,8 @@ const initialState = {
   order: [],
   status: 'idle',
   err: null,
-  prodactsInBasket: [],
   totalPrice: 0,
+  numberOrder: null,
 };
 
 export const fetchGetBasket = createAsyncThunk(
@@ -15,7 +15,7 @@ export const fetchGetBasket = createAsyncThunk(
   async ({ userId }, { rejectWithValue }) => {
     try {
       const response = await GetServices.getBasket(userId);
-      return response.data.prodacts;
+      return response.data;
     } catch (error) {
       return rejectWithValue(error.response.data);
     }
@@ -75,17 +75,25 @@ const BasketSlice = createSlice({
     getTotalPrice(state, { payload }) {
       state.totalPrice = payload;
     },
+    resetBasket(state) {
+      console.log('resetBasket')
+      state.order = [];
+    },
   },
   extraReducers(builder) {
     builder
       .addCase(fetchGetBasket.pending, (state) => {
         state.status = 'loading';
         state.err = null;
+        state.numberOrder = null;
       })
       .addCase(fetchGetBasket.fulfilled, (state, { payload }) => {
         state.status = 'success';
-        payload.sort((a, b) => (a.id > b.id ? 1 : -1));
-        state.order = payload;
+        if (!!payload.prodacts) {
+          payload.prodacts.sort((a, b) => (a.id > b.id ? 1 : -1));
+          state.order = payload.prodacts;
+        }
+        state.numberOrder = payload.id;
       })
       .addCase(fetchGetBasket.rejected, (state, { payload }) => {
         state.status = 'error';
@@ -97,8 +105,10 @@ const BasketSlice = createSlice({
       })
       .addCase(fetchAppendProdact.fulfilled, (state, { payload }) => {
         state.status = 'success';
+        if (!!payload) {
         payload.sort((a, b) => (a.id > b.id ? 1 : -1));
         state.order = payload;
+        }
       })
       .addCase(fetchAppendProdact.rejected, (state, { payload }) => {
         state.status = 'error';
@@ -144,51 +154,8 @@ const BasketSlice = createSlice({
         state.err = payload.data.message;
       });
   },
-
-  // reducers: {
-  //   formOrder(state, { payload }) {
-  //     const { img, name, price, prodactId, unit } = payload;
-  //     if (!!state.order.length) {
-  //       const arr = state.order.filter((item) => item.prodactId === prodactId);
-  //       if (!arr.length) {
-  //         state.order.push(payload);
-  //       } else {
-  //         const updateNum = arr[0].num + payload.num;
-
-  //         const updateOrder = state.order.map((item) =>
-  //           item.prodactId === prodactId
-  //             ? { img, name, price, prodactId, num: updateNum, unit }
-  //             : item
-  //         );
-  //         state.order = updateOrder;
-  //       }
-  //     } else {
-  //       state.order.push(payload);
-  //     }
-  //   },
-  //   updateOrder(state, { payload }) {
-  //     const { prodactId, increase } = payload;
-  //     const arr = state.order.filter((item) => item.prodactId === prodactId);
-  //     let updateNum;
-  //     increase
-  //       ? (updateNum = arr[0].num + 1)
-  //       : arr[0].minOrder < arr[0].num
-  //       ? (updateNum = arr[0].num - 1)
-  //       : (updateNum = arr[0].num);
-
-  //     const updatedOrder = state.order.map((item) =>
-  //       item.prodactId === prodactId ? { ...item, num: updateNum } : item
-  //     );
-  //     state.order = updatedOrder;
-  //   },
-  //   deleteProdact(state, {payload}) {
-  //       const { prodactId } = payload;
-  //       const updatedOrder = state.order.filter((item) => item.prodactId !== prodactId);
-  //       state.order = updatedOrder
-  //   }
-  // },
 });
 
-export const { getTotalPrice } = BasketSlice.actions;
+export const { getTotalPrice, resetBasket } = BasketSlice.actions;
 
 export default BasketSlice.reducer;

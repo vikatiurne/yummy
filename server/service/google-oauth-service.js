@@ -33,7 +33,6 @@ class GoogleOAuthService {
   }
 
   async registration(email, name, refreshToken) {
-    console.log(refreshToken);
     const candidate = await User.findOne({ where: { email } });
     if (candidate) {
       const userDto = new UserDto(candidate);

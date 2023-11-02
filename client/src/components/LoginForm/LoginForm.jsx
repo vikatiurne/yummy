@@ -13,6 +13,7 @@ import Button from '../UI/Button/Button';
 import AuthModal from '../Modals/AuthModal';
 import googleBtn from '../../assets/btn_google_signin.png';
 import styles from './LoginForm.module.css';
+import { fetchGetBasket } from '../../pages/Basket/BasketSlice';
 
 const LoginForm = () => {
   const [email, setEmail] = useState('');
@@ -31,6 +32,7 @@ const LoginForm = () => {
   const isAuth = useSelector((state) => state.auth.isAuth);
   const err = useSelector((state) => state.auth.error);
   const url = useSelector((state) => state.auth.redirectUrl);
+  const userId = useSelector((state) => state.auth.user.id);
 
   useEffect(() => {
     dispatch(fetchGetRedirectUrl());
@@ -44,7 +46,10 @@ const LoginForm = () => {
   const passwordHandler = (e) => setPassword(e.target.value);
   const nameHandler = (e) => setName(e.target.value);
 
-  const loginHandler = () => dispatch(fetchLogin({ email, password }));
+  const loginHandler = () => {
+    dispatch(fetchLogin({ email, password }));
+    if (!!userId) dispatch(fetchGetBasket({ userId }));
+  };
 
   const registrationHandler = () =>
     dispatch(fetchRegistration({ email, password, name }));
