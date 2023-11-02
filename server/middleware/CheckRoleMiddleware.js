@@ -1,4 +1,4 @@
-import { ApiError } from '../error/apiError.js';
+import { ApiError } from '../error/ApiError.js';
 import { tokenService } from '../service/token-service.js';
 
 export default function checkRoleMiddleware(role) {

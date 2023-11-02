@@ -2,7 +2,7 @@ import { v4 as uuidv4 } from 'uuid';
 import path from 'path';
 
 import { Prodact, ProdactInfo } from '../models/models.js';
-import { ApiError } from '../error/apiError.js';
+import { ApiError } from '../error/ApiError.js';
 
 class ProdactController {
   async create(req, res, next) {

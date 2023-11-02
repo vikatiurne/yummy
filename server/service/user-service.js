@@ -2,7 +2,7 @@ import bcrypt from 'bcrypt';
 import { v4 as uuidv4 } from 'uuid';
 import _ from 'lodash';
 
-import { ApiError } from '../error/apiError.js';
+import { ApiError } from '../error/ApiError.js';
 import { User } from '../models/models.js';
 import { mailService } from './mail-service.js';
 import { tokenService } from './token-service.js';
